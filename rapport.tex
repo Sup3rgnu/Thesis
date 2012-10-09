@@ -1,0 +1,396 @@
+\documentclass[a4paper,11pt]{kth-mag}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[swedish, english]{babel}
+\usepackage{modifications}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  showstringspaces=false,
+  commentstyle=\color{gray}\upshape,
+  captionpos=b
+}
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[s]{>}{<},
+  morecomment=[s]{<?}{?>},
+  stringstyle=\color{black},
+  identifierstyle=\color{darkblue},
+  keywordstyle=\color{cyan},
+  morekeywords={xmlns,version,type}% list your attributes here
+}
+
+\title{Semantic parsing of Swedish laws}
+
+\subtitle{Using RDF Lorem ipsum dolor sit amet, sed diam nonummy nibh eui
+              mod tincidunt ut laoreet dol}
+\foreigntitle{Lorem ipsum dolor sit amet, sed diam nonummy nibh eui
+              mod tincidunt ut laoreet dol}
+\author{Mikael Falgard}
+\date{\today}
+\blurb{Master's Thesis at NADA\\Supervisor: Sten Andersson\\Examiner: Anders Lansner}
+\trita{TRITA xxx yyyy-nn}
+\begin{document}
+\frontmatter
+\pagestyle{empty}
+\removepagenumbers
+\maketitle
+\selectlanguage{english}
+\begin{abstract}
+  This is a skeleton for KTH theses. More documentation
+  regarding the KTH thesis class file can be found in
+  the package documentation.
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. Fusce tempor. Nulla facilisi. Sed at turpis. Phasellus eu
+ipsum. Nam porttitor laoreet nulla. Phasellus massa massa, auctor
+rutrum, vehicula ut, porttitor a, massa. Pellentesque fringilla. Duis
+nibh risus, venenatis ac, tempor sed, vestibulum at, tellus. Class
+aptent taciti sociosqu ad litora torquent per conubia nostra, per
+inceptos hymenaeos.
+\end{abstract}
+\clearpage
+\begin{foreignabstract}{swedish}
+  Denna fil ger ett avhandlingsskelett.
+  Mer information om \LaTeX-mallen finns i
+  dokumentationen till paketet. ÅÄÖ lalal
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. Fusce tempor. Nulla facilisi. Sed at turpis. Phasellus eu
+ipsum. Nam porttitor laoreet nulla. Phasellus massa massa, auctor
+rutrum, vehicula ut, porttitor a, massa. Pellentesque fringilla. Duis
+nibh risus, venenatis ac, tempor sed, vestibulum at, tellus. Class
+aptent taciti sociosqu ad litora torquent per conubia nostra, per
+inceptos hymenaeos.
+\end{foreignabstract}
+\clearpage
+\tableofcontents*
+\mainmatter
+\pagestyle{newchap}
+\chapter{Introduction}
+
+\section{Rättsnätet} Rättsnätet is a free web service on
+\url{www.notisum.se}\footnote{Notisum AB - Lorem Ipsum} that provides legal
+information. Rättsnätet’s content consists of information gathered from
+authority databases and processed in several steps from pure text information
+into a rich XML file. Notisum also provides a premium service that includes
+additional information and services.
+
+
+\section{Lagen.nu}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Swedish Laws}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Abbreviations and Vocabulary} To be able to understand this report,
+the reader needs to understand the following abbreviations. Given the
+complexity of a legal document\footnote{For example "a paragraph" in a Swedish
+legal document does not correspond to a regular paragraph in the English
+language.} I will also present a vocabulary of how words are defined in the
+thesis.
+
+\subsection*{SFS} The Swedish Code of Statutes “Svensk författningssamling”
+(SFS) is the official publication of all Swedish laws enacted by the Riksdag
+and ordinances issued by the Government\footnote{SFS -
+\url{http://en.wikipedia.org/wiki/Swedish_Code_of_Statutes}}. Every law and
+ordinance has an SFS number, it consists of a four digit year, a colon, and
+then an incrementing number by year. For instance the Ordinance on tattooing
+dyes have the SFS number 2012:503\footnote{PDF copy of 2012:503 -
+\url{http://notisum.se/rnp/sls/sfs/20120503.pdf}}.
+
+\subsection*{SFSR}
+The Statute Register (SFSR) includes registry information of Swedish Code
+of Statutes (SFS), amendments, references to preparatory work, etc.
+
+\subsection*{SFST}
+Statutes in full text (SFST) includes Swedish Code of Statutes (SFS) in
+full text, ie all applicable laws and regulations.
+
+\subsection*{URI} Short for Unified Resource Identifier. Uniquely identifies
+resources in a collection\footnote{URI - \url{http://www.w3.org/TR/uri-
+clarification/}}, for example an hypertext transfer protocol url specifies a
+webpage on the internet.
+
+\subsection*{XML} Extensible Markup Language (XML) defines a set of rules for
+encoding documents in a format that is readable for both humans and
+machines\footnote{XML - \url{http://en.wikipedia.org/wiki/XML}}.
+
+\subsection*{HTML} Hypertext Markup Language (HTML) is the main language for
+displaying web pages and other information that can be displayed in a web
+browser\footnote{HTML - \url{http://en.wikipedia.org/wiki/Html}}.
+
+\subsection*{RDF} Resource Description Framwork (RDF) is a general method to
+describe or model information that is implemented in web
+resources\footnote{More detailed information about RDF in the ‘Background’
+section}.
+
+\subsection*{UTF-8} A encoding that can represent every character in the
+Unicode character set. UTF-8 has become the dominant character encoding for
+the World-Wide Web.
+
+\subsection*{ISO-8859-1} A character encoding that is generally intended for
+"Western European" languages, it encodes what it refers to as "Latin alphabet
+no 1" consisting of 191 characters from the Latin script.
+
+\subsection*{N3}
+Notation3, or N3 is a shorthand non-XML serialization of RDF models,
+designed with human-readability in mind which makes it more compact and
+readable than XML RDF notation.
+
+\subsection*{Dublin Core}
+The Dublin Core metadata terms are a set of vocabulary terms which
+can be used for simple resource description, or combining metadata
+vocabularies of different metadata standards in Semantic web implementations.
+
+\section{Problem}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Limitations}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\chapter{Background}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Swedish law}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Parsing laws}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Existing system}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Generic model}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{The Semantic Web} Natural languages have ambiguous meanings and even
+a human reader may in some cases have problems understanding the correct
+meaning of a text (for example the question "Do you know Bush?" may refer to
+knowing him as a friend or knowing who he is). By adding labels to text we
+create a semantic web, formed so that software can collect data.
+
+The semantic web is a web of data. The data can be stored in documents in
+various ways, through for example RDFs (Resource Description Framework). RDFs
+are structerd data, that can be linked to each other with information about
+and relations to objects. An example of an RDF object describing two CDs can
+be found in figure The aim of the semantic web is to be able to create more
+advanced knowledge management systems that can, for example locate
+inconsistencies in information, present the answer to a query instead of a
+page where the answer can be found and answer queries where the answer is
+spread over several documents.
+
+\begin{lstlisting}[language=xml, caption=An RDF example describing two records, label=rdfexample]
+<?xml version="1.0"?>
+<rdf:RDF 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:cd="http://www.recshop.fake/cd#">
+
+  <rdf:Description
+  rdf:about="http://www.recshop.fake/cd/Empire Burlesque">
+    <cd:artist>Bob Dylan</cd:artist>
+    <cd:country>USA</cd:country>
+    <cd:company>Columbia</cd:company>
+    <cd:price>10.90</cd:price>
+    <cd:year>1985</cd:year>
+  </rdf:Description>
+
+  <rdf:Description
+  rdf:about="http://www.recshop.fake/cd/Hide your heart">
+    <cd:artist>Bonnie Tyler</cd:artist>
+    <cd:country>UK</cd:country>
+    <cd:company>CBS Records</cd:company>
+    <cd:price>9.90</cd:price>
+    <cd:year>1988</cd:year>
+  </rdf:Description>
+</rdf:RDF>
+\end{lstlisting}
+
+\subsection{The Semantic Web - By using RDF} Resource Description Framwork
+(RDF) is a general method to describe or model information that is implemented
+in web resources. It is based upon the idea of making statements about
+resources in the form of triples of subject-predicate-object. The subject
+denotes the resource, the predicate denotes traits or aspects of the resource
+and also expresses a relationship between the subject and the object. For
+example: "The sky" (subject) "has the color" (predicate) "blue" (object) could
+be an RDF triple.
+
+\section{Rättsinformationsprojektet}
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\chapter{Method}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Existing system}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Python}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{RDF}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\part{Results}
+
+\chapter{Analysis}
+
+The result is a program that parse and transform downloaded laws. There’s no graphic user interface since that wasn’t the focus of the thesis. The programs main file is Controller.py and the process is started by running that as a python file in for example a terminal. 
+
+\begin{lstlisting}[language=bash, caption=Command to run the program]
+kungen@dell-desktop:~/Dropbox/Notisum/lawParse$ python Controller.py
+No parameters given
+Valid parameters are: DownloadAll, GenerateAll, ParseAll
+kungen@dell-desktop:~/Dropbox/Notisum/lawParse$ 
+\end{lstlisting}
+
+As the above figure shows the program expects a command parameter as input. The option to choose a command when there’s only one (ParseAll) available at the moment is implemented to facilitate the implementation of other future functions as well. 
+
+\section{RDF}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus.
+
+\section{Rättsinformationsprojektet standard}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus.  
+
+\section{Performance}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\chapter{Implementation}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Central classes}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{General functionality}
+
+The help classes are used to simplify (mostly) for the Parser by defining native python types, functions with functionality adapted for this project's needs.  
+
+\subsection{DataObjects.py}
+
+Makes it possible to build an object model for each legal source document, by
+creating simple data objects. These objects are base data types that inherit
+from native python types such as unicode, list, dict. The data types have
+added support for other properties that can be set when instantiated.
+
+\subsection{Dispatcher.py}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\subsection{Reference.py}
+
+Parses plaintext and finds references to other legal source documents and
+returns a list with Link-objects\footnote{A Link-object is a base data type
+that inherits from 'Unicode Structure' in DataObjects.py, basically a unicode
+string with a 'URI' property.}. Depending on with which properties it is
+initialized, it can find different types of references (Other laws,
+'Rättsfall', 'EG-lagstiftning' etc..).
+
+\subsection{TextReader.py}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\subsection{Util.py}
+
+A few small help functions mostly related to checking and or renaming directories and files. 
+
+\section{Unicode}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\subsection{3rd party libraries}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\subsection{Version control}
+
+GitHub\footnote{GitHub is a web-based hosting service for software development
+projects that use the Git revision control system. \url{http://github.com}} is
+used for web hosting and revision control, the code used for this report is
+open source and available to checkout from the link below. On the github page
+there's also an issue tracker with the current open issues, bugs and some
+enhancements.\\\\
+Project: \url{https://github.com/Sup3rgnu/lawParse}\\
+Checkout: \url{https://github.com/Sup3rgnu/lawParse.git}
+
+\chapter{Conclusions and Discussions}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Results}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\section{Future development}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\subsection{RDF Database}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 
+
+\chapter*{Bibliography}
+
+[1] Ted Talk video about Linked Data with Tim Berners-Lee \url{http://www.ted.com/talks/tim_berners_lee_on_the_next_web.html}
+
+
+\appendix
+\addappheadtotoc
+\chapter{RDF}\label{appA}
+
+\begin{figure}[ht]
+\begin{center}
+And here is a figure
+\caption{\small{Several statements describing the same resource.}}\label{RDF_4}
+\end{center}
+\end{figure}
+
+that we refer to here: \ref{RDF_4}
+\end{document}
