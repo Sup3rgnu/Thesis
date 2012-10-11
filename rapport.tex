@@ -79,21 +79,44 @@ inceptos hymenaeos.
 \tableofcontents*
 \mainmatter
 \pagestyle{newchap}
+
+\part{Introduction}
 \chapter{Introduction}
 
+\section{Swedish Laws}
+
+According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. This is done by the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
+
+\section{Rättsinformationssystemet}
+Lorem Ipsum
+
 \section{Rättsnätet} Rättsnätet is a free web service on
-\url{www.notisum.se}\footnote{Notisum AB - Lorem Ipsum} that provides legal
+\url{www.notisum.se}\footnote{Notisum AB is the company that I am writing this thesis at.} that provides legal
 information. Rättsnätet’s content consists of information gathered from
-authority databases and processed in several steps from pure text information
+authority databases and is processed in several steps from pure text information
 into a rich XML file. Notisum also provides a premium service that includes
 additional information and services.
 
-
 \section{Lagen.nu}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law and the Semantic Web. The source code is published as open source, and the website encourages sharing and reuse of the code. 
 
-\section{Swedish Laws}
+\section{Problem}
+Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
+Instead of using compiler technology lagen.nu use regular expressions to parse law documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
+The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet.
+
+\subsection{Questions of concern}
+
+TODO:
+
+\begin{itemize} 
+\item The amount of documents. There is over 200,000 documents, that amount requires a very fast process. Today the PP does its job in 14 hours a day, but then it only handles a tenth of the documents per day. 
+\item Legal source text contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
+\item Cross-references between the 200,000+ documents require theoretically, an array of 40 billion nodes.
+\item The output from the process needs to be structurally similar to the current process output so the post process can be used with as little tweaking as possible.
+\end{itemize}
+
+\section{Limitations}
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
@@ -157,22 +180,14 @@ The Dublin Core metadata terms are a set of vocabulary terms which
 can be used for simple resource description, or combining metadata
 vocabularies of different metadata standards in Semantic web implementations.
 
-\section{Problem}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
-\section{Limitations}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
 \chapter{Background}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
 \section{Swedish law}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+One of the most fundamental definitions in this paper is legal sources and legal source documents. A legal source is a type of legal information such as a constitution in SFS\footnote{The Swedish Code of Statutes, "Svensk författningssamling"} or verdicts from one of the Swedish courts. A legal source document is a specific document for a certain legal source, such as \textit{Personuppgiftslagen} (SFS 1998:204).\\\\ 
+This paper will be limited to content from SFS, a abbreviation for "Svensk författningssamling". SFS is the official publication of all new Swedish laws enacted by the Swedish Parliament and ordinances issued by the Government. Each law has an SFS number, including legislations amending already existing laws. The SFS number consists of a four digit year, a colon and a serial number assigned in chronological order of the date of issue. 
 
 \section{Parsing laws}
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
@@ -340,12 +355,12 @@ A few small help functions mostly related to checking and or renaming directorie
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
-\subsection{3rd party libraries}
+\section{3rd party libraries}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
-\subsection{Version control}
+\section{Version control}
 
 GitHub\footnote{GitHub is a web-based hosting service for software development
 projects that use the Git revision control system. \url{http://github.com}} is
