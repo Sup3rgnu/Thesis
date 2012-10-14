@@ -85,10 +85,16 @@ inceptos hymenaeos.
 
 \section{Swedish Laws}
 
-According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. This is done by the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
+According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. For example the collection of statutory law, the \textit{Svensk Författningssamling} (SFS) is published in the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
 
 \section{Rättsinformationssystemet}
-Lorem Ipsum
+One of the goals with \textit{Rättsinformationsförordningen} is that all legal information should be coherent, 
+searchable from a single location and have a uniform presentation. Today’s decentralized system where 
+authorities are responsible for their own documents, leads to a couple of problems. One of them being that 
+the documents don’t follow the same format standards.\\\\ 
+In 2006 a project called \textit{Rättsinformationsprojektet} was commenced to develop the legal information system further. 
+A first step was to assure that the document that is going to be published contains the required meta data 
+for that type of document. The next step is to assure that the information is delivered in a correct format.\footnote{Guidelines for publisher, developers etc are found on \url{http://www.lagrummet.se}} For example, date data must be unambiguously expressed in machine-readable form. 
 
 \section{Rättsnätet} Rättsnätet is a free web service on
 \url{www.notisum.se}\footnote{Notisum AB is the company that I am writing this thesis at.} that provides legal
@@ -98,27 +104,31 @@ into a rich XML file. Notisum also provides a premium service that includes
 additional information and services.
 
 \section{Lagen.nu}
-A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law and the Semantic Web. The source code is published as open source, and the website encourages sharing and reuse of the code. 
+A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}. 
 
 \section{Problem}
 Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
-Instead of using compiler technology lagen.nu use regular expressions to parse law documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
-The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet.
-
-\subsection{Questions of concern}
-
-TODO:
+Instead of using compiler technology lagen.nu use regular expressions to parse legal documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
+The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet.  \subsection{Questions of concern} TODO:
 
 \begin{itemize} 
-\item The amount of documents. There is over 200,000 documents, that amount requires a very fast process. Today the PP does its job in 14 hours a day, but then it only handles a tenth of the documents per day. 
-\item Legal source text contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
+\item The amount of documents, since there is over 200.000 legal documents, the program requires a fast process.
+\item Legal source texts contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
 \item Cross-references between the 200,000+ documents require theoretically, an array of 40 billion nodes.
-\item The output from the process needs to be structurally similar to the current process output so the post process can be used with as little tweaking as possible.
+\item The output from the process needs to be structurally similar to Notisums current process output so the post process (generating html) can be used with as little tweaking as possible.
 \end{itemize}
 
 \section{Limitations}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+The implementation part of the thesis will be limited to the parsing step of the process. It will not cover the downloading or final transformation to html that is ready to be published.\\
+To make this project feasible it is limited to handling only SFS data. Other types of data sources that a complete process would need to handle are for example: 
+\begin{itemize}
+\item Propositions
+\item Supreme Court summaries
+\item Decisions of the Courts of Appeal, and the Labour Court 
+\item European legal regulations and directives
+\end{itemize}
+The goal is of course to create a generic and loosely coupled code base, so that it is easy to implement these 
+modules in a later stage. 
 
 \section{Abbreviations and Vocabulary} To be able to understand this report,
 the reader needs to understand the following abbreviations. Given the
@@ -186,24 +196,19 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
 \section{Swedish law}
-One of the most fundamental definitions in this paper is legal sources and legal source documents. A legal source is a type of legal information such as a constitution in SFS\footnote{The Swedish Code of Statutes, "Svensk författningssamling"} or verdicts from one of the Swedish courts. A legal source document is a specific document for a certain legal source, such as \textit{Personuppgiftslagen} (SFS 1998:204).\\\\ 
-This paper will be limited to content from SFS, a abbreviation for "Svensk författningssamling". SFS is the official publication of all new Swedish laws enacted by the Swedish Parliament and ordinances issued by the Government. Each law has an SFS number, including legislations amending already existing laws. The SFS number consists of a four digit year, a colon and a serial number assigned in chronological order of the date of issue. 
+The main legislative powers are the parliament (Riksdagen) and the government (Regeringen), these institutions can adopt statutes which are published in the main official collection of statutory law, the \textit{Svensk Författningssamling} (SFS). The statutes enacted by the parliament are referred to as laws, and the statutes enacted by the government as ordinances.\\\\
+When a statute is changed, this is done by adopting a new statute (the change statute) that states what sections of the old statute (the base statute) are to be changed, and how. There is not a new merged version published of the statute in SFS, only the base statute and change statute(s).\\\\
+Two recurring definitions in this paper are legal sources and legal source documents. A legal source is a type of legal information such as a constitution in SFS or verdicts from one of the Swedish courts. A legal source document is a specific document for a certain legal source, such as \textit{Personuppgiftslagen} (SFS 1998:204).\\\\ 
+Each law has an SFS number, including legislations amending already existing laws. The SFS number consists of a four digit year, a colon and a serial number assigned in chronological order of the date of issue. 
 
-\section{Parsing laws}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
-\section{Existing system}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
-\section{Generic model}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+\subsection{Rättsinformationssystemet}
+Rättsinformationssystemet is the state's system to make legal information such as laws, legislative histories, court cases, etc. - available to the public via the Internet. This information is produced by a number of different authorities. Today, each agency is responsible for publishing "their" information via their own website. It is all tied together by the website \url{http://www.lagrummet.se} which is referring to each agency's respective legal information page.\\\\
+This decentralized approach has its advantages. It gives the authorities a lot of freedom to design their information in a way that fits them. A downside is that they use this freedom to invent their own standards. \textit{Rättsinformationsförordningen}\footnote{Rättsinformationssystemet is regulated in this ordinance (1999:175)} is not very detailed on how the information should be presented, only that it should be published.\\\\
+An additional purpose with the system is the ability for the private sector to re-use government information to create added value services\footnote{Services like Rättsnätet from Notisum and lagen.nu}. Legal information is of great value, that could be even better utilized if it was easier to re-use the information.
 
 \section{The Semantic Web} Natural languages have ambiguous meanings and even
 a human reader may in some cases have problems understanding the correct
-meaning of a text (for example the question "Do you know Bush?" may refer to
+meaning of a text (for example the question "Do you know Zlatan?" may refer to
 knowing him as a friend or knowing who he is). By adding labels to text we
 create a semantic web, formed so that software can collect data.
 
@@ -252,10 +257,6 @@ and also expresses a relationship between the subject and the object. For
 example: "The sky" (subject) "has the color" (predicate) "blue" (object) could
 be an RDF triple.
 
-\section{Rättsinformationsprojektet}
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
 \chapter{Method}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
@@ -266,12 +267,15 @@ purus.
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
-\section{Python}
+\section{Prototype}
+Lorem ipsum..
+
+\subsection{Python}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
 
-\section{RDF}
+\subsection{RDF}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
