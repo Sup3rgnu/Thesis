@@ -7,6 +7,8 @@
 \usepackage{modifications}
 \usepackage{hyperref}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
 \usepackage{color}
 \definecolor{gray}{rgb}{0.4,0.4,0.4}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.6}
@@ -83,11 +85,11 @@ inceptos hymenaeos.
 \part{Introduction}
 \chapter{Introduction}
 
-\section{Swedish Laws}
+\section{Legal information online}
 
 According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. For example the collection of statutory law, the \textit{Svensk Författningssamling} (SFS) is published in the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
 
-\section{Rättsinformationssystemet}
+\section{Uniform standards}
 One of the goals with \textit{Rättsinformationsförordningen} is that all legal information should be coherent, 
 searchable from a single location and have a uniform presentation. Today’s decentralized system where 
 authorities are responsible for their own documents, leads to a couple of problems. One of them being that 
@@ -109,8 +111,7 @@ A similar website to Notisum is lagen.nu, they also provide all Swedish laws as 
 \section{Problem}
 Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
 Instead of using compiler technology lagen.nu use regular expressions to parse legal documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
-The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet.  \subsection{Questions of concern} TODO:
-
+The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet. Some aspects of the problem to keep in mind are:
 \begin{itemize} 
 \item The amount of documents, since there is over 200.000 legal documents, the program requires a fast process.
 \item Legal source texts contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
@@ -190,6 +191,9 @@ The Dublin Core metadata terms are a set of vocabulary terms which
 can be used for simple resource description, or combining metadata
 vocabularies of different metadata standards in Semantic web implementations.
 
+\subsection*{The Semantic Web}
+The word semantic stands for "the meaning of". The semantic of something is the meaning of something. The Semantic Web = a Web with a meaning.
+
 \chapter{Background}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
@@ -206,22 +210,22 @@ Rättsinformationssystemet is the state's system to make legal information such 
 This decentralized approach has its advantages. It gives the authorities a lot of freedom to design their information in a way that fits them. A downside is that they use this freedom to invent their own standards. \textit{Rättsinformationsförordningen}\footnote{Rättsinformationssystemet is regulated in this ordinance (1999:175)} is not very detailed on how the information should be presented, only that it should be published.\\\\
 An additional purpose with the system is the ability for the private sector to re-use government information to create added value services\footnote{Services like Rättsnätet from Notisum and lagen.nu}. Legal information is of great value, that could be even better utilized if it was easier to re-use the information.
 
-\section{The Semantic Web} Natural languages have ambiguous meanings and even
+\section{The Semantic Web - A Web with a meaning} 
+The Semantic Web is a collaborative movement led by W3C\footnote{The international standards body, the World Wide Web Consortium (W3C} that promotes common data formats on the world wide web by encouraging semantic content in web pages. W3C's "Semantic Web Vision" is a future where: 
+\begin{itemize}
+\item Web information has exact meaning
+\item Web information can be understood and processed by computers
+\item Computers can integrate information from the web 
+\end{itemize}
+
+Natural languages have ambiguous meanings and even
 a human reader may in some cases have problems understanding the correct
-meaning of a text (for example the question "Do you know Zlatan?" may refer to
-knowing him as a friend or knowing who he is). By adding labels to text we
-create a semantic web, formed so that software can collect data.
+meaning of a text. If someone ask me  "Do you know Zlatan?" they may refer to if I know him as a friend or if Iknow who he is. It is the same for computers when they are trying to understand the meaning of a text. By adding labels to the text we can make it easier to interpret and thus creating a semantic web, formed so that software can collect and analyze data. The aim is that system can present the answer to a query instead of a page where the answer can be found, and answer queries where the answer is spread over several documents.
+The semantic web is a web of data, where the data can be stored in documents in various ways. Using RDF is a way to structure data, so that it can be linked to other data with information and realations to objects.
 
-The semantic web is a web of data. The data can be stored in documents in
-various ways, through for example RDFs (Resource Description Framework). RDFs
-are structerd data, that can be linked to each other with information about
-and relations to objects. An example of an RDF object describing two CDs can
-be found in figure The aim of the semantic web is to be able to create more
-advanced knowledge management systems that can, for example locate
-inconsistencies in information, present the answer to a query instead of a
-page where the answer can be found and answer queries where the answer is
-spread over several documents.
-
+\subsection{RDF}
+Resource Description Framwork (RDF) is a general method to describe or model information that is implemented in web resources. It is based upon the idea of making statements about resources in the form of triples of subject-predicate-object. The subject denotes the resource (it can be anything that can have a URI), the predicate denotes traits or aspects of the resource and also expresses a relationship between the subject and the object. For example: "The sky" (subject) "has the color" (predicate) "blue" (object) could be an RDF triple.\\\\
+Let's take a look at an example\footnote{Full example can be viewed at \url{http://www.w3schools.com/rdf/rdf_example.asp}} of an RDF object describing two CDs.
 \begin{lstlisting}[language=xml, caption=An RDF example describing two records, label=rdfexample]
 <?xml version="1.0"?>
 <rdf:RDF 
@@ -247,25 +251,24 @@ spread over several documents.
   </rdf:Description>
 </rdf:RDF>
 \end{lstlisting}
-
-\subsection{The Semantic Web - By using RDF} Resource Description Framwork
-(RDF) is a general method to describe or model information that is implemented
-in web resources. It is based upon the idea of making statements about
-resources in the form of triples of subject-predicate-object. The subject
-denotes the resource, the predicate denotes traits or aspects of the resource
-and also expresses a relationship between the subject and the object. For
-example: "The sky" (subject) "has the color" (predicate) "blue" (object) could
-be an RDF triple.
-
+The lines \textbf{xmlns:rdf} and \textbf{xmlns:cd} define from which namespace elements with the rdf and cd prefix are from. The \textbf{rdf:Description} element contains the description of the resource identified by the \textbf{rdf:about} attribute. Finally the elements \textbf{cd:artist, cd:country, cd:company} etc. are properties of the resource.
+  
 \chapter{Method}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+purus.
 
+\section{Methodology} 
+asdasdads
 \section{Existing system}
 
 Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
 purus. 
+
+\begin{center}
+\includegraphics[scale=0.6]{imgs/oldSystemChart.png}
+\captionof{figure}{Chart describing existing parse process}
+\end{center}
 
 \section{Prototype}
 Lorem ipsum..
