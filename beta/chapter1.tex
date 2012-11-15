@@ -1,0 +1,109 @@
+\chapter{Introduction}
+\section{Legal information online}
+
+According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. For example the collection of statutory law, the \textit{Svensk Författningssamling} (SFS) is published in the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
+
+\section{Uniform standards}
+One of the goals with \textit{Rättsinformationsförordningen} is that all legal information should be coherent, 
+searchable from a single location and have a uniform presentation. Today’s decentralized system where 
+authorities are responsible for their own documents, leads to a couple of problems. One of them being that 
+the documents don’t follow the same format standards.\\\\ 
+In 2006 a project called \textit{Rättsinformationsprojektet} was commenced to develop the legal information system further. 
+A first step was to assure that the document that is going to be published contains the required meta data 
+for that type of document. The next step is to assure that the information is delivered in a correct format.\footnote{Guidelines for publisher, developers etc are found on \url{http://www.lagrummet.se}} For example, date data must be unambiguously expressed in machine-readable form. 
+
+\section{Rättsnätet} Rättsnätet is a free web service on
+\url{www.notisum.se}\footnote{Notisum AB is the company that I am writing this thesis at.} that provides legal
+information. Rättsnätet’s content consists of information gathered from
+authority databases and is processed in several steps from pure text information
+into a rich XML file. Notisum also provides a premium service that includes
+additional information and services.
+
+\section{Lagen.nu}
+A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}. 
+
+\section{Problem}
+Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
+Instead of using compiler technology lagen.nu use regular expressions to parse legal documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
+The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet. Some aspects of the problem to keep in mind are:
+\begin{itemize} 
+\item The amount of documents, since there is over 200.000 legal documents, the program requires a fast process.
+\item Legal source texts contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
+\item Cross-references between the 200,000+ documents require theoretically, an array of 40 billion nodes.
+\item The output from the process needs to be structurally similar to Notisums current process output so the post process (generating html) can be used with as little tweaking as possible.
+\end{itemize}
+
+\section{Limitations}
+The implementation part of the thesis will be limited to the parsing step of the process. It will not cover the downloading or final transformation to html that is ready to be published.\\
+To make this project feasible it is limited to handling only SFS data. Other types of data sources that a complete process would need to handle are for example: 
+\begin{itemize}
+\item Propositions
+\item Supreme Court summaries
+\item Decisions of the Courts of Appeal, and the Labour Court 
+\item European legal regulations and directives
+\end{itemize}
+The goal is of course to create a generic and loosely coupled code base, so that it is easy to implement these 
+modules in a later stage. 
+
+\section{Abbreviations and Vocabulary} To be able to understand this report,
+the reader needs to understand the following abbreviations. Given the
+complexity of a legal document\footnote{For example "a paragraph" in a Swedish
+legal document does not correspond to a regular paragraph in the English
+language.} I will also present a vocabulary of how words are defined in the
+thesis.
+
+\subsection*{SFS} The Swedish Code of Statutes “Svensk författningssamling”
+(SFS) is the official publication of all Swedish laws enacted by the Riksdag
+and ordinances issued by the Government\footnote{SFS -
+\url{http://en.wikipedia.org/wiki/Swedish_Code_of_Statutes}}. Every law and
+ordinance has an SFS number, it consists of a four digit year, a colon, and
+then an incrementing number by year. For instance the Ordinance on tattooing
+dyes have the SFS number 2012:503\footnote{PDF copy of 2012:503 -
+\url{http://notisum.se/rnp/sls/sfs/20120503.pdf}}.
+
+\subsection*{SFSR}
+The Statute Register (SFSR) includes registry information of Swedish Code
+of Statutes (SFS), amendments, references to preparatory work, etc.
+
+\subsection*{SFST}
+Statutes in full text (SFST) includes Swedish Code of Statutes (SFS) in
+full text, ie all applicable laws and regulations.
+
+\subsection*{URI} Short for Unified Resource Identifier. Uniquely identifies
+resources in a collection\footnote{URI - \url{http://www.w3.org/TR/uri-
+clarification/}}, for example an hypertext transfer protocol url specifies a
+webpage on the internet.
+
+\subsection*{XML} Extensible Markup Language (XML) defines a set of rules for
+encoding documents in a format that is readable for both humans and
+machines\footnote{XML - \url{http://en.wikipedia.org/wiki/XML}}.
+
+\subsection*{HTML} Hypertext Markup Language (HTML) is the main language for
+displaying web pages and other information that can be displayed in a web
+browser\footnote{HTML - \url{http://en.wikipedia.org/wiki/Html}}.
+
+\subsection*{RDF} Resource Description Framwork (RDF) is a general method to
+describe or model information that is implemented in web
+resources\footnote{More detailed information about RDF in the ‘Background’
+section}.
+
+\subsection*{UTF-8} A encoding that can represent every character in the
+Unicode character set. UTF-8 has become the dominant character encoding for
+the World-Wide Web.
+
+\subsection*{ISO-8859-1} A character encoding that is generally intended for
+"Western European" languages, it encodes what it refers to as "Latin alphabet
+no 1" consisting of 191 characters from the Latin script.
+
+\subsection*{N3}
+Notation3, or N3 is a shorthand non-XML serialization of RDF models,
+designed with human-readability in mind which makes it more compact and
+readable than XML RDF notation.
+
+\subsection*{Dublin Core}
+The Dublin Core metadata terms are a set of vocabulary terms which
+can be used for simple resource description, or combining metadata
+vocabularies of different metadata standards in Semantic web implementations.
+
+\subsection*{The Semantic Web}
+The word semantic stands for "the meaning of". The semantic of something is the meaning of something. The Semantic Web = a Web with a meaning.

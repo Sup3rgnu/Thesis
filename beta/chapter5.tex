@@ -1,0 +1,27 @@
+\chapter{Analysis}
+
+\section{Process flow}
+
+The parsing begins if the file met these three requirements:
+\begin{enumerate}
+\item If we have the file parsed already and it is newer than the incoming raw file, don't parse it again.
+\item Filter out documents that is not proper SFS documents. They will have a name like ‘N1992:31’\footnote{Why?}
+\item Skip parsing the documents that have been or will be revoked, they are marked as “The constitution is repealed / shall be repealed”\footnote{“Författningen är upphävd/skall upphävas”}
+\end{enumerate}
+
+\section{Output}
+
+\subsection{RDF}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus.
+
+\subsection{Rättsinformationsprojektet standard}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus.  
+
+\section{Performance}
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
+purus. 

@@ -1,0 +1,111 @@
+\chapter{Implementation}
+
+In this chapter I will discuss how the implementation was done and describe some implementation ideas and some parts of the prototype.\\\\
+
+\section{Interface}
+In order to interact with the program, read status and error information some sort of user interface is needed. Most common is a graphic user interface\footnote{A graphic user interface is a human-computer interface i.e., a way for humans to interact with computers.} that for example uses icons and menus. However, this falls outside the scope of this project, which focuses on the core of the program rather than the user experience. Instead, a rudimentary command line interface\footnote{Command line interface (CLI), an interface which use only text and are accessed solely by a keyboard. For example via an terminal in Linux.} was implemented, where the user can specify arguments at the start of the program (which is done via a terminal). During the parse and transformation process status updates will be presented in the terminal, for example if something fails the user will be notified. Also when the program is done the user will receive information about what was processed and the outcome.\\\\
+The main file is called Controller.py and to run the program from a terminal an argument specifying what the program should do is needed. The intresting arguments for this thesis are 'ParseAll' and 'GenerateAll' other possible arguments are 'DownloadAll' and possible candidates to implement would be only 'Parse' or 'Generate' followed by a specific source, for example 'Parse 1997:240'. Also one can specify what types of legal sources that should be run, (will be relevant when more sources than SFS are implemented.) default behavior is to run for all types. There's also two available flags to use, '-d' for debug mode and '-h' or '--help' for help instructions.    
+
+\begin{minted}[bgcolor=bg,firstline=2]{console}
+$
+kungen@dell-desktop:~$ python Controller.py --help
+Usage: pyhton Controller.py [-d | -h] [arg]
+Available flags are: -d (debug), -h--help (help)
+kungen@dell-desktop:~$ python Controller.py
+No arguments given
+Valid arguments are: DownloadAll, GenerateAll, ParseAll
+kungen@dell-desktop:~$ python Controller.py ParseAll
+
+\end{minted}
+
+\section{Main modules}
+
+The main modules consists of the 'Controller' and 'Source' that includes the logic to run the program. Then there's the different legal type modules that contains their specific logic.  
+
+\subsection{Controller.py}
+The controller handles validation of user input (arguments and flags) if everything is correct it fetches all available legal source types (in this case just SFS) and then run the command given as an argument, ex. ‘ParseAll’ for each type.
+
+\subsection{Source.py}
+This module is a blueprint of how modules inheriting from it needs to look like. It contains the base classes for Controller and Parser, these classes contains functions that child classes need to implement and functions that can be overridden. Example of general functions are: checking if a file is up-to-date, trimming filenames or returning the XML or XHTML name for a certain file.\\
+However most of the code will be specific for each legal source type and be implemented in the child modules. To support a new type of legal source for example 'EG Court cases'\footnote{European.. TODO}, create an 'EG' module that inherits Source.Controller and Source.Parser, that is all that is needed for it to function with the rest of the program.
+
+\subsection{SFS.py}
+This is the module specific for SFS documents, basically it takes a list of all the downloaded files\footnote{The path to the base directory is specified in a config file, then it appends a path like ‘/sfs/dl/sfsr/1997’ for example for all SFS full text documents from 1997} and parse the files one by one.\\
+The largest and most complex class is 'SFSParser' that parses a document and creates objects for each part of the document. All objects are defined as classes\footnote{These classes inherit from base classes in DataObjects.py.} here, for example 'Rubrik', 'Stycke', 'Paragraf' etc. One of the parser's duties is to figure out what type of object a certain part of the text should be represented as. This is achieved by first guessing what it should be based on for example the previous section, then running functions to verify or reject that type.
+
+\section{Helper modules}
+
+The helper modules are used to simplify (mostly) for the Parser by defining native python types, providing different types of text readers etc.  
+
+\subsection{DataObjects.py}
+
+Makes it possible to build an object model for each legal source document, by
+creating simple data objects. These objects are base data types that inherit
+from native python types such as unicode, list, dictionary. The data types have
+added support for other properties that can be set when instantiated.
+
+\subsection{Reference.py}
+
+Parses plaintext and finds references to other legal source documents and
+returns a list with "Link-objects"\footnote{A Link-object is a base data type
+that inherits from 'Unicode Structure' in DataObjects.py, basically a unicode
+string with a 'URI' property.}. Depending on with which properties it is
+initialized, it can find different types of references (Other laws,
+'Rättsfall', 'EG-lagstiftning' etc..).
+
+\subsection{TextReader.py}
+A helper class to read text files in different ways, by line, paragraph etc.  
+
+\subsection{Util.py}
+
+A few small help functions mostly related to checking and or renaming directories and files. 
+
+\section{Unicode}
+
+Unicode is a standard for consistent encoding, representation and handling of text. It can be implemented by different character encodings\footnote{Example of common character encodings are, UTF-8 and ISO-8859-1, see the vocabulary in chapter 1 for more info.}.\\
+Python’s Unicode string type stores characters from the Unicode character set. Unicode characters don’t have an encoding; each character is represented by a number which is called its code point. However we work with text files, which contains encoded text, not characters. Each character in the text is encoded as one or more bytes in the file. If you read a line of text from a file, you get bytes, not characters.\\
+To solve this, we need to decode the text strings that we read from files, to do this, we can use Python’s \textbf{decode()} method on the string, and pass it the name of the encoding like so:\\
+
+\begin{minted}[bgcolor=bg]{python}
+encoding = "iso-8859-1"
+
+raw = file.readline()
+txt = raw.decode(encoding)
+\end{minted}
+\linebreak
+\newline
+When we need to save a Unicode string to a file, we have to do the opposite conversion and encode it. The \textbf{encode()} method converts from Unicode to an encoded string.\\
+\begin{minted}[bgcolor=bg]{python}
+out = txt.encode("utf-8")
+\end{minted}
+\linebreak
+\newline
+There is a lot of files and text to handle when parsing laws, to avoid issue with different encodings and representations of characters we try to only work with Unicode in the code. Also some of the third party libraries only work with Unicode which is another reason to stick with that. The content is converted\footnote{The conversion is done by the Util module.} to Unicode when it is loaded into the program. A Unicode string in Python looks like this \textit{u'string'} instead of a just \textit{‘string’} and that is the format that is used to represent strings when needed.\\
+The source files we work with are saved as ISO-8859-1 and the generated files we create will be saved in UTF-8. 
+
+\section{3rd party libraries}
+
+There's a few third party libraries that are used in the program to perform certain tasks. 
+
+\subsection{BeautifulSoup}
+
+BeautifulSoup is a really helpful library when you need to parse HTML documents (even with malformed markup, i.e. non closed tags). It creates a DOM\footnote{Document Model Object (DOM) is a convention for representing and interacting with objects in HTML, XHTML and XML documents.} for parsed pages that can be used to extract data, for example you can ask it to extract "The first row in the second table on the page". This comes very handy and have been to a great assistance during my work.     
+
+\subsection{SimpleParse}
+
+SimpleParse allows you to generate parsers directly from EBNF\footnote{Extended Backus-Naur Form is a formal way to describe the grammar of languages. It consists of rules which are restrictions governing how symbols can be comined.} grammar. This library has also been very helpful during my work since it allowed me to specify rules (for different types of documents, references, headlines etc.) and then create a parser with those capabilities.  
+
+\subsection{RDFLib}
+
+RDFLib is a library for working with rdf that contains an RDF/XML parser and serializer. It also contains graph data structures to represent data. In my case it was for example used to read and represent data from  an external file with URIs to all the SFS laws.   
+
+\section{Version control}
+
+GitHub\footnote{GitHub is a web-based hosting service for software development
+projects that use the Git revision control system. \url{http://github.com}} is
+used for web hosting and revision control, the code used for this report is
+open source and available to checkout from the link below. On the github page
+there's also an issue tracker with the current open issues, bugs and some
+enhancements.\\\\
+Project: \url{https://github.com/Sup3rgnu/lawParse}\\
+Checkout\footnote{For more info regarding how to checkout, see \url{http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html}}: \url{https://github.com/Sup3rgnu/lawParse.git}
