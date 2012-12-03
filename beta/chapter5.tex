@@ -60,7 +60,7 @@ Registerpost:
 \newline
 The first registerpost created for 1997:146 describes basic properties such as responsible authority, entry into force and SFS number. The second\footnote{There's actually three register posts for 1997:146, I left a 'change post' out to save space} registerpost states that there has been some changes to the statute. We can find out if it is a change or if some part has been revoked\footnote{Omfattning can be for example "Change" or "Revoked" ("Ändr." or "Upph.")}, also we can see the force into entry and the change statute's SFS number. All these values are represented with different data types discussed in the 'Implementation' section, for ex. 'Link', 'DateSubject' or a unicode 'u' string.\\\\
 The second part is to deal with the full text part of the statute, we do this by creating an intermediate text file with just the raw\footnote{It is not the complete downloaded file, we get rid of the "HTML" mark up of the document so that we only have text.} text. This file is saved in a directory called 'intermediate' on the same level as the downloaded, 'dl' directory in the file tree structure. \\\\ 
-The file we have downloaded consist of a header\footnote{See bilaga X for example input file.} with information similar to the register file. We could probably reuse some information\footnote{SFS number and responsible authority could be reused for example.} but we have everything set up for parsing and it is a fairly simple procedure so we go ahead and save it again. This information will be part of the header in the HTML file when that is created later on. For the information in the header we create a corresponding object, in the example below we create UnicodeSubjects, with the values \textit{SFS number} and \textit{Headline}, their predicates will be an URI to that object's definition.\\
+The file we have downloaded consist of a header\footnote{See bilaga X for example input file.} with information similar to the register file. We could probably reuse some information\footnote{SFS number and responsible authority could be reused for example.} but we have everything set up for parsing and it is a fairly simple procedure so we go ahead and save it again. This information will be part of the header in the HTML file when that is created later on. For the information in the header we create a corresponding object, in the example below we create \textit{UnicodeSubjects}\footnote{We will look closer at this in the next section 'RDF markup'}, with the values \textit{SFS number} and \textit{Headline}, their predicates will be an URI to that object's definition.\\
 \begin{minted}[bgcolor=bg]{python}
 if key == u'Rubrik':
 	meta[key] = UnicodeSubject(val, predicate=self.labels[key])
@@ -101,31 +101,16 @@ def guesState(self):
 \newline
 When we are done with the parsing the text body we add some additional information to the law’s meta information such as time created and preliminary work. To find out if there is any preliminary work we check the \textit{registerposts} in the register we have created, and save the URI to that document if existing.
 
-\subsection{Generating XHTML}
-To create an XHTML representation of the parsed statute we use a third party library called \textit{Genshi}\footnote{See the 'Implementation' section for more information regarding third party libs.}. We use Genshi’s ‘TemplateLoader’ to load a template we have created that specifies how we want the our XHTML to look like, ex. which values goes where etc. A nice feature with Genshi is that it uses a Stream-based filtering\footnote{\url{http://genshi.edgewall.org/wiki/Documentation/filters.html}} that allows us to apply various transformations as a template is being processed, without having to parse and serialize the output again.\\\\
-Below is an example of how the template file renders a headline. As the code
-snippet shows there is two <h> tag templates to chose from, one if it is a "normal" headline and one if it is an sub headline, then an extra class is added to the tag.\\
-\begin{minted}[bgcolor=bg]{html}
-<div py:def="render_rubrik(rubrik)" py:strip="" py:choose="">
-    <h py:when="rubrik.type == 'underrubrik'" py:content="rubrik"
-	id="${rubrik.id}" class="underrubrik">Underrubrik</h>
-    <h py:otherwise="" py:content="rubrik"
-	id="${rubrik.id}">Huvudrubrik</h>
-</div>
-\end{minted}
-\linebreak  
-\newline
-
-
 \subsection{RDF markup }
-
+During all the different parsing steps, I have mentioned that we create data objects with specialized properties for the different parts of the statute. Let's take a closer look at one of the objects that are created during our parse example.\\
+In the previous section we look at example code for finding a statute's SFS number and headline, they are both of the type \textit{UnicodeSubject}. The class \textit{UnicodeSubject} it self does not do anything as we can see in the class definition below.\\
 \begin{minted}[bgcolor=bg]{python}
 class UnicodeSubject(PredicateType, UnicodeStructure):
 	pass
 \end{minted} 
 \linebreak
 \newline
-lorem\\
+However the class inherits from two other classes, \textit{PredicateType} and \textit{UnicodeStructure}. We are going to look at what our \textit{PredicateType} objects looks like. In the second chapter we stated that RDF is based upon the idea of making statements about resources in the form of triples of subject-predicate-object. Here we are obviously looking at the 'Predicate' part, as the class definition below reads; Inheriting from this class gives the child class a predicate attribute that describes the RDF predicate to which the class is the RDF subject.\\    
 \begin{minted}[bgcolor=bg]{python}
 class PredicateType(object):
     """Inheriting from this class gives the child class a 
@@ -148,29 +133,53 @@ class PredicateType(object):
 \end{minted} 
 \linebreak
 \newline
-Ex: of kwargs and args from PredicateType init:\\
+When the object is initialized we compare the predicate's URI to some common name spaces that we have stored, if that is the case we can swap the long URI for a much shorter prefix. In our case with the SFS number and the headline we can substitute the title's URI \url{http://purl.org/dc/terms/title} for simply 'dct:title' and \url{http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#fsNummer} becomes 'rinfo:fsNummer'. Below we find part of the name space list, as we can see we can reuse definitions that are already defined by large international organisations, it is only 'rinfo' that is specific "Swedish-legal" definition.     
 \begin{minted}[bgcolor=bg]{python}
-{'predicate': rdflib.URIRef(
-    'http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#fsNummer')}
-(u'1997:146',)
-
-{'predicate': 'dct:references', 
- 'uri': u'http://rinfo.lagrummet.se/publ/sfs/1994:524'}
-(u'f\xf6rordningen (1994:524)',)
+# Common namespaces and prefixes for them
+ns = {
+    'dc':'http://purl.org/dc/elements/1.1/',
+    'dct':'http://purl.org/dc/terms/',
+    'rdfs':'http://www.w3.org/2000/01/rdf-schema#',
+    'rdf':'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'skos':'http://www.w3.org/2008/05/skos#',
+    'rinfo':'http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#',
+    'xht2':'http://www.w3.org/2002/06/xhtml2/'
+}
 \end{minted} 
 \linebreak
 \newline
-lorem\\
+This way we can mark up our legal documents with short prefixes that makes the documents readable for both humans and computers in a way that contributes to the Semantic Web. In a final HTML file our title would look something like the snippet below, much more meaningful then just a header tag with a title, yet still simple enough to be understandable for human readers.\\
+\begin{minted}[bgcolor=bg]{html}
+<h1 property="dct:title">Hemvarnsforordning (1997:146)</h1>
+\end{minted}
+\linebreak
+\newline
+\subsection{Generating XHTML}
+To create an XHTML representation of the parsed statute we use a third party library called \textit{Genshi}\footnote{See the 'Implementation' section for more information regarding third party libs.}. We use Genshi’s ‘TemplateLoader’ to load a template we have created that specifies how we want the our XHTML to look like, ex. which values goes where etc. A nice feature with Genshi is that it uses a Stream-based filtering\footnote{\url{http://genshi.edgewall.org/wiki/Documentation/filters.html}} that allows us to apply various transformations as a template is being processed, without having to parse and serialize the output again.\\\\
+Below is an example of how the template file renders a headline. As the code
+snippet shows there is two <h> tag templates to chose from, one if it is a "normal" headline and one if it is an sub headline, then an extra class is added to the tag.\\
+\begin{minted}[bgcolor=bg]{html}
+<div py:def="render_rubrik(rubrik)" py:strip="" py:choose="">
+    <h py:when="rubrik.type == 'underrubrik'" py:content="rubrik"
+	id="${rubrik.id}" class="underrubrik">Underrubrik</h>
+    <h py:otherwise="" py:content="rubrik"
+	id="${rubrik.id}">Huvudrubrik</h>
+</div>
+\end{minted}
+\linebreak  
+\newline
+TODO: Describe more what it does.\\
+\subsection{Bonus - Generating HTML}
+Not part of the thesis, but an example implementation using XSL transformation, a look at the final output. 
 
 
 \section{Output}
-Example of the parsed html file.
+Example of the parsed xht file and maybe also an example html file.
 \subsection{RDF}
 RDF examples from the law
 
 \subsection{Rättsinformationsprojektet standard}
 Examples of places where the law is marked up with rip's standard. 
-
 Text from their specifications.
 
 \section{Performance}
