@@ -155,7 +155,8 @@ This way we can mark up our legal documents with short prefixes that makes the d
 \linebreak
 \newline
 \subsection{Generating XHTML}
-To create an XHTML representation of the parsed statute we use a third party library called \textit{Genshi}\footnote{See the 'Implementation' section for more information regarding third party libs.}. We use Genshi’s ‘TemplateLoader’ to load a template we have created that specifies how we want the our XHTML to look like, ex. which values goes where etc. A nice feature with Genshi is that it uses a Stream-based filtering\footnote{\url{http://genshi.edgewall.org/wiki/Documentation/filters.html}} that allows us to apply various transformations as a template is being processed, without having to parse and serialize the output again.\\\\
+The way we are going to represent the parsed and marked up statute is as a XHTML file (in a later step we can transform the XHTML files to HTML to be able to display them to users in a browser). One of the reasons that the XHTML format is used is that through its extensibility and its focus on document structure works well to represent legal documents in a semantically meaningful way.\\
+To create an XHTML representation of the parsed statute we use a third party library called \textit{Genshi}\footnote{See the 'Implementation' section for more information regarding third party libs.}. We use Genshi's "TemplateLoader" to load a template we have created that specifies how we want our XHTML file to look like, ex. which values goes where etc. A nice feature with Genshi is that it uses a Stream-based filtering\footnote{\url{http://genshi.edgewall.org/wiki/Documentation/filters.html}} that allows us to apply various transformations as a template is being processed, without having to parse and serialize the output again.\\\\
 Below is an example of how the template file renders a headline. As the code
 snippet shows there is two <h> tag templates to chose from, one if it is a "normal" headline and one if it is an sub headline, then an extra class is added to the tag.\\
 \begin{minted}[bgcolor=bg]{html}
@@ -172,11 +173,160 @@ TODO: Describe more what it does.\\
 \subsection{Bonus - Generating HTML}
 Not part of the thesis, but an example implementation using XSL transformation, a look at the final output. 
 
-
 \section{Output}
-Example of the parsed xht file and maybe also an example html file.
+The output we get in form of a XHTML document consists of two parts a <head> and a <body> as normal HTML document. We are going to look at those parts\footnote{I will only show parts of the resulting XHTML document here to save space and to focus on some of the interesting parts. The full document can be found in the appendix.} to see what we ended up with after parsing and marking up our statute. \\\\
+All documents will have several namespaces, they will be declared in the beginning of the document in the <html> element. These namespaces are mainly\footnote{The XHTML2 namespace is the default namespace and is used for elements and attributes.} used to express the predicate in the RDF triples that will be embedded in the document.\\ 
+\begin{minted}[bgcolor=bg]{xml}
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/2002/06/xhtml2/" 
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:dct="http://purl.org/dc/terms/" 
+    xmlns:rinfo="http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#" 
+    xmlns:rinfot="http://example.com/terms#" 
+    xsi:schemaLocation="http://www.w3.org/2002/06/xhtml2/ 
+    	http://www.w3.org/MarkUp/SCHEMA/xhtml2.xsd" 
+    xml:base="http://rinfo.lagrummet.se/publ/sfs/1997:146" 
+    xml:lang="sv" 
+    about="http://rinfo.lagrummet.se/publ/sfs/1997:146">
+\end{minted}
+\linebreak
+\newline
+
+\subsection{Document head - metadata}
+The first part of the document is inside the <head> element of the document, it contains metadata regarding the document. We find the obvious information such as title and a URI to rättsinformationsprojektet definition of the statute. Then further down there is some elements that are marked up with the RDFa\footnote{See chapter 2, section 2 regarding RDFa for more information about RDFa attributes} attributes. There are some that use the attributes “property” and “content” describing things such as SFS number and the date when the document was fetched. Lastly we find elements marked up with the “rel” (relationship) RDFa attribute, these are links to inter alia the change statutes we found for this statute.\\
+\begin{minted}[bgcolor=bg]{html}
+<head about="http://rinfo.lagrummet.se/publ/sfs/1997:146">
+    <title>Hemvarnsforordning (1997:146)</title>
+    <base href="http://rinfo.lagrummet.se/publ/sfs/1997:146"/>
+    <link rel="rinfo:forfattningsamling" 
+	href="http://rinfo.lagrummet.se/ref/sfs"/>
+    <meta property="rinfo:fsNummer" content="1997:146"/>
+    <meta property="rinfoex:senastHamtad" content="2012-08-01" 
+	datatype="xsd:date"/>
+    <meta property="rinfo:utfardandedatum" content="1997-04-10" 
+	datatype="xsd:date"/>
+    <link rel="rinfo:konsoliderar" 
+	href="http://rinfo.lagrummet.se/publ/sfs/1997:146"/>
+    <link rel="rinfo:konsolideringsunderlag" 
+	href="http://rinfo.lagrummet.se/publ/sfs/1997:146"/>
+    <link rel="rinfo:konsolideringsunderlag" 
+	href="http://rinfo.lagrummet.se/publ/sfs/2005:819"/>
+    <link rel="rinfo:konsolideringsunderlag" 
+	href="http://rinfo.lagrummet.se/publ/sfs/2012:334"/>
+</head>
+\end{minted}
+\linebreak
+\newline
+
+\subsection{Document body - Full text}
+The second part of the document is the body, which consists of four parts itself, with the statutes title being the first.\\
+\begin{minted}[bgcolor=bg]{html}
+<h property="dct:title">Hemvarnsforordningen (1997:146)</h>
+\end{minted}
+\linebreak
+It is a <h> tag (header) that is marked up with the RDFa attribute "property" which is set to "dct:title", meaning that this part is a title and the definition for title can be found using the namespace that "dct" is defined as in the beginning of the document\footnote{The prefix dct represents the Extended Dublin Core namespace}.\\\\
+In XHTML it is possible to assign a role to an element, for example “contentinfo” or “main”\footnote{TODO: some src}. This feature is used to declare that a certain section is the document’s actual text (main) etc. The next part of the body is marked with the role “contentinfo”. Which is including metadata relating to the document as a whole, and in the typical use case that should be visible to the user and not hidden in the document’s head. It can be thought of as a short intro with some short facts that the user might be interested in seeing right away when looking at the statute.\\
+\begin{minted}[bgcolor=bg]{html}
+<dl role="contentinfo">
+...
+<dt>SFS nr</dt>
+    <dd property="rinfo:fsNummer">1997:146</dd>
+<dt>Utgivare</dt>
+    <dd rel="dct:publisher" 
+	href="http://example.com/org/2008/regeringskansliet">
+	Regeringskansliet</dd>
+...
+\end{minted}
+\linebreak
+\newline
+As we can see from the figure above, the elements, SFS number and publisher are marked up with RDFa attributes.\\\\
+The next section of the body is where it starting to get a little bit more interesting in a semantic point of view. It is the part with the documents actual text, it has been assigned the role “main”. If we look at the two first paragraphs below\footnote{The actual text includes åäö and "§" characters, but the latex plugin (minted) used to generate code snippets can not handle those characters, so I have manually removed them from this figure.}, we see that almost everything is marked up with RDFa attributes.\\
+\begin{minted}[bgcolor=bg]{html}
+<section role="main">
+<h id="R1">Hemvarnets andamal</h>
+<section id="P1" typeof="rinfo:Paragraf" about="#P1" 
+    property="rinfot:paragrafnummer" content="1">
+    <span rel="dct:isPartOf" 
+	href="http://rinfo.lagrummet.se/publ/sfs/1997:146"/>
+    
+    <p id="P1S1" about="#P1S1" typeof="rinfo:Stycke">
+    <span rel="dct:isPartOf" href="#P1"/>
+    <span class="paragrafbeteckning">1</span>
+    Hemvarnet har till uppgift att skydda skyddsobjekt. Hemvarnet 
+    ska i ovrigt kunna stodja de operativa insatsforbanden och 
+    delta i annan verksamhet dar Forsvarsmakten medverkar.
+    </p>
+
+    <p id="P1S2" about="#P1S2" typeof="rinfo:Stycke">
+    <span rel="dct:isPartOf" href="#P1"/>
+    Hemvarnet ingar i Forsvarsmakten.<a rel="dct:references" 
+    href="http://rinfo.lagrummet.se/publ/sfs/1997:146#L2012:334">
+    Forordning (2012:334).</a>
+    </p>
+</section>
+...
+</section>
+\end{minted}
+\linebreak
+\newline
+First we have a header with the id “R1” which stands for header number one\footnote{Rubrik in Swedish}. Then the first paragraph starts and that includes many RDFa attributes such as the “typeof” attribute which states that the following text is a paragraph and the definition for a paragraph can be found at the URI represented by “rinfo” followed by “Paragraf”. We can also see that this section has an id “P1”, which of course is short for “Paragraph one”. There is also a relation (the “rel” attribute), it is of the type “PartOf” which is a Dublin Core element, it is stating that this section is a part of the statute 1997:146. After that comes a similar code snippet but this time it is a “Stycke"\footnote{Stycke is a subsection or "subparagraph"} that is a part of “P1”, the first paragraph that is. It has the id “P1S1”, which stands for Paragraph one, Section one, this id notation continues by increasing the number for each element and concatenating sections as we traverse into the document tree.\\
+The first paragraphs second section (P1S2) looks similar, it is marked up with a relation attribute with a reference to one of the change statutes (2012:819).\\\\
+The last part of the document body is a section with the role “secondary”, as the name suggests it includes material that is not a part of the document text but is associated with it, typically a list of changes and transitions.\\
+\begin{minted}[bgcolor=bg]{html}
+<section role="secondary">
+<h1>Andringar och overgangsbestammelser</h1>
+...
+<section id="L2012:334" 
+    about="http://rinfo.lagrummet.se/publ/sfs/2012:334">
+<dl>
+<dt>Omfattning</dt>
+    <dd>andr. <a rel="rinfo:ersatter"
+    href="http://rinfo.lagrummet.se/publ/sfs/1997:146#P1">1</a></dd>
+<dt>Ikraft</dt>
+    <dd property="rinfo:Ikrafttradandesdatum">2012-07-16</dd>
+<dt>Rubrik</dt>
+    <dd property="dct:title">Forordning (2012:334) om andring i 
+    hemvarnsforordningen (1997:146)</dd>
+<dt>SFS-nummer</dt>
+    <dd property="rinfo:fsNummer">2012:334</dd>
+</dl>
+</section>
+
+    </section>
+  </body>
+</html>
+\end{minted}
+\linebreak
+\newline
+We can see that there is a section with the id “L2012:334” and a URI to that change statute. Then there is information regarding the change, what has been change, when is the entry into force date etc. All this information is of course marked up with RDFa attributes and elements from both the dct and rinfo namespaces. 
+ 
 \subsection{RDF}
-RDF examples from the law
+The vocabularies that are used are mainly, Dublin Core (dct) and ESFR (rinfo). The Dublin Core vocabulary that is used is an extended version called “DCMI Terms”, some of the elements that are used from that are:\\ 
+\begin{itemize}
+\item \textbf{dct:title} - The document's title, for ex. "Hemvärnsförordningen" (1997:146)
+\item \textbf{dct:publisher} - The publisher, for ex. “Regeringskansliet”
+\item \textbf{dct:alternate} - A shorter prefix, ex “TF” for “Tryckfrihetsförordningen”
+\item \textbf{dct:reference} - Used for references to another document. 
+\end{itemize}
+The other vocabulary, ESFR which stands for \textit{Electronic Standard for Legal information} (Elektronisk standard för rättsinformation) is provided by Rättsinformationsprojektet.\\\\
+TODO: More about rinfo.
+
+\subsubsection{RDF Triples}
+If we extract RDF data from the output document, possible with for example RDFa Distiller\footnote{RDF Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are some of the triples we have looked at above in N3-format\footnote{TODO: More about Notation 3 format)}.\\
+\begin{minted}[bgcolor=bg]{xml}
+<http://rinfo.lagrummet.se/publ/sfs/1997:146#P1S1> 
+<http://purl.org/dc/terms/isPartOf>
+<http://rinfo.lagrummet.se/publ/sfs/1997:146#P1>
+...
+<http://rinfo.lagrummet.se/publ/sfs/1997:146#P1S2>
+<http://purl.org/dc/terms/references>
+<http://rinfo.lagrummet.se/publ/sfs/1997:146#L2012:334>
+\end{minted}
+\linebreak
+\newline
+The first triple is stating that “P1S1 is a part of P1” and the second “P1S2 is a reference to L2012:334”. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the the different parts and where to find more information about them.
 
 \subsection{Rättsinformationsprojektet standard}
 Examples of places where the law is marked up with rip's standard. 

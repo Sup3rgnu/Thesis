@@ -45,6 +45,32 @@ Let's take a look at an example\footnote{Full example can be viewed at \url{http
 \newline
 The two lines at the top, \textbf{xmlns:rdf} and \textbf{xmlns:cd} define from which namespace elements with the rdf and cd prefix are from. The \textbf{rdf:Description} element contains the description of the resource identified by the \textbf{rdf:about} attribute. Finally the elements \textbf{cd:artist, cd:country, cd:company} etc. are properties of the resource.
 
+\section{RDFa}
+RDFa is a syntax for embedding an RDF graph in an XHTML document by using XHTML attributes for expressing RDF properties. It was proposed by Mark Birbeck in the form of a W3C note entitled XHTML and RDF\footnote{Bibliography [2] "XHTML and RDF W3C Note 14 February 2004". World Wide Web Consortium. 2004-02-14. Retrieved 2007-12-27.}.\\\\
+RDFa is based on attributes that are used to carry metadata in an XML/HTML/XHTML language. There are some attributes that have been reused, for example “href” and “src” that comes from the HTML syntax. Then there is also a set of new attributes that are specified for RDFa, the attributes are: 
+\begin{itemize}
+\item \textbf{about} - A URI specifying the resource the metadata is about
+\item \textbf{rel and rev} - A relationship and reverse-relationship with another resource, respectively
+\item \textbf{src, href and resource} - The partner resource
+\item \textbf{property} - A property for the content
+\item \textbf{content} - optional attribute that overrides the content of the element when using the property attribute
+\item \textbf{datatype} - optional attribute that specifies the datatype of text specified for use with the property attribute
+\item \textbf{typeof} - optional attribute that specifies the RDF type(s) of the subject or the partner resource
+\end{itemize}
+Not all (X)HTML validators recognize and know how to validate these attributes, however this is usually not a problem when using a browser to view the document since most browsers ignore attributes that they not recognize. This means that the RDFa attributes does not have any effect on what is displayed to the user.\\\\
+Below we have a simple example\footnote{For more RDFa examples see \url{http://en.wikipedia.org/wiki/RDFa}} where RDFa is used to markup basic information about a book. Here we are using Dublin Core to add metadata to this document, it is declared at the top so later on in the text we can use the prefix “dc” followed by the Dublin Core data element for the element we are describing (for example title).\\  
+\begin{minted}[bgcolor=bg]{html}
+<div xmlns:dc="http://purl.org/dc/elements/1.1/"
+  about="http://www.example.com/books/wikinomics">
+  <span property="dc:title">Wikinomics</span>
+  <span property="dc:creator">Don Tapscott</span>
+  <span property="dc:date">2006-10-01</span>
+</div>
+\end{minted}
+\linebreak
+\newline
+Essentially what we are trying to do is to bridge the gap between what the computer sees and what a human reader sees. Giving the computer a way to know that headline expresses a title or that the sub-headline indicates the author, hints that a human reader understands while the computer only sees headline and sub-headline. 
+
 \section{Linked Data - Connect data across the Web}
 The Semantic Web isn't just about putting data on the web. It is about creating connections through links, so that when you have some of it, you can find other, related, data.\\\\
 The term Linked data describes a method of publishing structured data so that it can be interlinked and become more useful. This is done by following a data model which is based on resources and that describe their properties, including relationships to other resources. By using standardized names for resources and property types, data sets from many different providers integrated. By expressing the relationships between resources in different data sets, a user may discover additional relevant data.\\
