@@ -171,7 +171,8 @@ snippet shows there is two <h> tag templates to chose from, one if it is a "norm
 \newline
 TODO: Describe more what it does.\\
 \subsection{Bonus - Generating HTML}
-Not part of the thesis, but an example implementation using XSL transformation, a look at the final output. 
+Not part of the thesis, but an example implementation using XSL transformation, a look at the final output.\\\\
+TODO 
 
 \section{Output}
 The output we get in form of a XHTML document consists of two parts a <head> and a <body> as normal HTML document. We are going to look at those parts\footnote{I will only show parts of the resulting XHTML document here to save space and to focus on some of the interesting parts. The full document can be found in the appendix.} to see what we ended up with after parsing and marking up our statute. \\\\
@@ -227,7 +228,7 @@ The second part of the document is the body, which consists of four parts itself
 \end{minted}
 \linebreak
 It is a <h> tag (header) that is marked up with the RDFa attribute "property" which is set to "dct:title", meaning that this part is a title and the definition for title can be found using the namespace that "dct" is defined as in the beginning of the document\footnote{The prefix dct represents the Extended Dublin Core namespace}.\\\\
-In XHTML it is possible to assign a role to an element, for example “contentinfo” or “main”\footnote{TODO: some src}. This feature is used to declare that a certain section is the document’s actual text (main) etc. The next part of the body is marked with the role “contentinfo”. Which is including metadata relating to the document as a whole, and in the typical use case that should be visible to the user and not hidden in the document’s head. It can be thought of as a short intro with some short facts that the user might be interested in seeing right away when looking at the statute.\\
+In XHTML it is possible to assign a role to an element, for example “contentinfo” or “main”\footnote{TODO: src}. This feature is used to declare that a certain section is the document’s actual text (main) etc. The next part of the body is marked with the role “contentinfo”. Which is including metadata relating to the document as a whole, and in the typical use case that should be visible to the user and not hidden in the document’s head. It can be thought of as a short intro with some short facts that the user might be interested in seeing right away when looking at the statute.\\
 \begin{minted}[bgcolor=bg]{html}
 <dl role="contentinfo">
 ...
@@ -303,18 +304,17 @@ The last part of the document body is a section with the role “secondary”, a
 We can see that there is a section with the id “L2012:334” and a URI to that change statute. Then there is information regarding the change, what has been change, when is the entry into force date etc. All this information is of course marked up with RDFa attributes and elements from both the dct and rinfo namespaces. 
  
 \subsection{RDF}
-The vocabularies that are used are mainly, Dublin Core (dct) and ESFR (rinfo). The Dublin Core vocabulary that is used is an extended version called “DCMI Terms”, some of the elements that are used from that are:\\ 
+The vocabularies that are used are mainly, Dublin Core (dct) and Rättsinformationsprojekt's own vocabulary (rinfo). The Dublin Core vocabulary that is used is an extended version called “DCMI Terms”, some of the elements that are used from that are:\\ 
 \begin{itemize}
 \item \textbf{dct:title} - The document's title, for ex. "Hemvärnsförordningen" (1997:146)
 \item \textbf{dct:publisher} - The publisher, for ex. “Regeringskansliet”
 \item \textbf{dct:alternate} - A shorter prefix, ex “TF” for “Tryckfrihetsförordningen”
 \item \textbf{dct:reference} - Used for references to another document. 
 \end{itemize}
-The other vocabulary, ESFR which stands for \textit{Electronic Standard for Legal information} (Elektronisk standard för rättsinformation) is provided by Rättsinformationsprojektet.\\\\
-TODO: More about rinfo.
+The other vocabulary, \textit{rinfo} is provided by Rättsinformationsprojektet\footnote{More information regarding Rättsinformationsprojektet's URI principles see \url{http://dev.lagrummet.se/dokumentation/system/uri-principer.pdf}}. It includes definitions such as "Ikrafttradandesdatum", "ersatter", "paragrafnummer" and other attributes that are specific to legal documents. A conceptual model that describes the document types, properties and other related matters that are Swedish Legal Information can be found in Rättsinformationsprojektets documentation \url{http://dev.lagrummet.se/dokumentation/model.pdf}\\\\
 
 \subsubsection{RDF Triples}
-If we extract RDF data from the output document, possible with for example RDFa Distiller\footnote{RDF Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are some of the triples we have looked at above in N3-format\footnote{TODO: More about Notation 3 format)}.\\
+If we extract RDF data from the output document, which is possible with for example RDFa Distiller\footnote{RDFa Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are some of the triples we have looked at above in N3-format\footnote{TODO: More about Notation 3 format)}.\\
 \begin{minted}[bgcolor=bg]{xml}
 <http://rinfo.lagrummet.se/publ/sfs/1997:146#P1S1> 
 <http://purl.org/dc/terms/isPartOf>
@@ -326,12 +326,40 @@ If we extract RDF data from the output document, possible with for example RDFa 
 \end{minted}
 \linebreak
 \newline
-The first triple is stating that “P1S1 is a part of P1” and the second “P1S2 is a reference to L2012:334”. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the the different parts and where to find more information about them.
-
-\subsection{Rättsinformationsprojektet standard}
-Examples of places where the law is marked up with rip's standard. 
-Text from their specifications.
+The first triple is stating that “P1S1 is a part of P1” that is, "Paragraph 1, Section 2" is a part of "Paragraph 1" which makes sense to a human reader but now it is also understandable to a computer. The second triple states that “P1S2 is a reference to L2012:334”, in this case, Paragraph 1, section 2 has been revoked and replaced with a new statute, 2012:334. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the the different parts, how they are connected and where to find more information about them.
 
 \section{Performance}
-Timing for 1, 100, 1000, all laws? Maybe a nice chart. 
-What step is the most time/power consuming?
+Here are some numbers collected when running the parsing step, XHTML generation step and total running time.\\\\
+Computer specifications for benchmark:\\\\ 
+\begin{tabular}{l l}
+Make & Dell\\
+Model & Vostro V13 (laptop)\\
+Processor & Intel Celeron CPU 743 @ 1.30 GHz\\
+Memory & 1.9 GiB\\
+OS & Ubuntu 12.04 32-bit\\
+\end{tabular}
+\linebreak
+\newline
+TODO: Add new numbers / charts with complete timings, and compare to a faster computer.\\\\
+
+\subsection{Parsing}
+\begin{tabular}{l l}
+Number of statutes parsed & 1215\\
+Average running time	& 2.42s\\
+Max running time &  67.25s\\
+Min running time & 0.99s\\
+\textbf{Total running time} & 2935s / 48min 55s\\
+\end{tabular}
+\linebreak
+\newline
+As we can see from these numbers and what becomes even more clear in the charts below, most of the statutes are parsed very fast, the average running time is less than three seconds. There are a few statutes that are very slow that makes up most of the total running time.\\\\
+\includegraphics[scale=0.6]{../imgs/time_parse1.png}
+\captionof{figure}{Chart showing running times for parsing step}
+\includegraphics[scale=0.6]{../imgs/time_parse2.png}
+\captionof{figure}{Chart showing running times for parsing step zoomed in to 10 seconds}
+The statute that took the longest time (67 sec) is \textit{Rättegångsbalken} (1942:740) which consist of 59 chapters and more than 100 change statutes, hence it takes a lot of time to mark up all that text.
+
+\subsection{Generating XHTML}
+TODO
+\subsection{Total running time}
+TODO

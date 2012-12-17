@@ -14,10 +14,24 @@ Below follows a short description of the steps the process goes through today. T
 \end{center}
 For the sake of simplicity lets say we are only handling SFS laws\footnote{In reality the program handles all kind of legal source documents.}. First we have a module that handles the actual downloading of the legal source files, (full text and register files\footnote{TODO, explain Registerfile} for each law) this part is written in C\# and could be reused\footnote{This part just have to download the files, then the prototype can do it's magic on those files.} for the prototype. Next we have two programs that for each law converts the downloaded files to very simple XML files, one for the full text and one for the registerfile. The next step is also an XML transformation, it takes the simple XML files and turns them into more comprehensive XML files. Now it's time to create files that can be viewed in a browser, this is done in several steps where data structures containing information regarding the laws are created with information like paragraph references and links. In the end a SHTML\footnote{TODO, explain SHTML} file that is ready to be published with this information is created. The final step is to export these files (and other legal source documents) to databases and update the website to display the newly created or updated files.
 
+\subsection{Output}
+The resulting file will look something like the code example below, that is describing paragraph 4, section 1 from the \textit{Home Guard regulation} (1997:146).\\
+\begin{minted}[bgcolor=bg]{html}
+<a name="4"></a>
+<p><a name="P4"></a>
+<a name="P4S1"></a><b>4</b> 
+Hemvarnets personal bestar av hemvarnsman och personal 
+med avtal for tjanstgoring i hemvarnet enligt forordningen...
+</p>
+\end{minted}
+\linebreak
+\newline
+As we can see the only markup that is done to the document is regular HTML markup that can be used to link within the document for example. In the Result section we will look at examples of how this statute will look when it is marked up with RDF.   
+
 \section{Prototype}
-The main differences between the old system and the prototype are: 
+The main differences between the old system and the prototype will be: 
 \begin{itemize}
-\item Language, the prototype is written in Python\footnote{TODO, something about python} which is a object oriented\footnote{something about OO} languge that is well suited for tasks like this one. It is easy to divide the code into separate modules that handle different tasks. Furthermore it is convinient to work with (apply transformations etc.) objects such as whole documents, paragraphs. 
+\item Language, the prototype is written in Python\footnote{TODO, something about python} which is a object oriented\footnote{something about OO} languge that is well suited for tasks like this one. It is easy to divide the code into separate modules that handle different tasks. Furthermore it is convinient to work with (apply transformations etc.) objects such as whole documents, paragraphs etc. 
 \item Follows standards proposed by Rättsinformationsprojektet for legal documents.   
 \item The generated files will be marked up with RDF to contribute to a more semantic web. 
 \end{itemize} 

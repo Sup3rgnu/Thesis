@@ -20,7 +20,8 @@ into a rich XML file. Notisum also provides a premium service that includes
 additional information and services.
 
 \section{Lagen.nu}
-A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}. 
+A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}.\\\\
+The source code is open source\footnote{Link to lagen.nu’s license file \url{http://svn.lagen.nu/svnroot/trunk/LICENSE}} and the author encourages the use and reuse of it. I have gained a lot of inspiration from that code and in terms of architecture I have reused parts of it. 
 
 \section{Problem}
 Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\

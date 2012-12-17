@@ -88,6 +88,7 @@ The image below shows datasets that have been published in Linked Data format, b
 \includegraphics[scale=0.6]{../imgs/lod-datasets.png}
 \captionof{figure}{Linking Open Data cloud diagram, by Richard Cyganiak and Anja Jentzsch.}
 \end{center}
+Linked data is essential to actually connect the semantic web, common sense considerations determine when to make a link and when not to.
 
 \section{Swedish law}
 The main legislative powers are the parliament (Riksdagen) and the government (Regeringen), these institutions can adopt statutes which are published in the main official collection of statutory law, the \textit{Svensk Författningssamling} (SFS). The statutes enacted by the parliament are referred to as laws, and the statutes enacted by the government as ordinances.\\\\
@@ -99,4 +100,12 @@ Today there's 3000 constitutions but there's no well defined structure that desc
 \subsection{Rättsinformationssystemet}
 \textit{Rättsinformationssystemet} is the state's system to make legal information such as laws, legislative histories, court cases, etc. - available to the public via the Internet. This information is produced by a number of different authorities. Today, each agency is responsible for publishing "their" information via their own website. It is all tied together by the website \url{http://www.lagrummet.se} which is referring to each agency's respective legal information page.\\
 This decentralized approach has its advantages. It gives the authorities a lot of freedom to design their information in a way that fits them. A downside is that they use this freedom to invent their own standards. \textit{Rättsinformationsförordningen}\footnote{Rättsinformationssystemet is regulated in this ordinance (1999:175)} is not very detailed on how the information should be presented, only that it should be published.\\\\
-An additional purpose with the system is the ability for the private sector to re-use government information to create added value services\footnote{Services like Rättsnätet from Notisum and lagen.nu}. Legal information is of great value, that could be even better utilized if it was easier to re-use the information.
+An additional purpose with the system is the ability for the private sector to re-use government information to create added value services\footnote{Services like Rättsnätet from Notisum and lagen.nu}. Legal information is of great value, that could be even better utilized if it was easier to re-use the information.\\\\
+The project’s aim is to establish a central place where all legal documents can be searched and retrieved. To achieve this all authorities that are publishing legal documents need to share a common technical standard and use well-defined metadata terms. The project imagines  the end-product to look something like the figure\footnote{The figure is from rättsinformationprojektets website \url{http://dev.lagrummet.se/dokumentation/}} below. 
+\begin{center}
+\includegraphics[scale=0.6]{../imgs/rinfo.png}
+\captionof{figure}{Rättsinformationsprojektet - A central place for legal information }
+\end{center}
+As the figure shows legal documents should be retrieved from various government databases, checked to make sure that they are in a correct format (XHTML/RDFa). Once this is done, the data will be stored, documents in PDF format and metadata (RDF files) on disk.\\
+From here (rinfomain) it will be possible to search and retrieve all documents as pdf files, but there will also be a parallel service (rinfoservice). It will have a richer interface where a user can access documents in different formats such as JSON, Atom and HTML in a REST API\footnote{A web service implemented using HTTP and the principles of REST. } or even ask SPARQL-queries\footnote{RDF query language, that is, a query language for databases, able to retrieve and manipulate data stored in Resource Description Framework format.} against the RDF data.   
+
