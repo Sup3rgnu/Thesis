@@ -1,7 +1,7 @@
 \chapter{Background}
 
 \section{The Semantic Web - A Web with a meaning} 
-The Semantic Web is a collaborative movement led by W3C\footnote{The international standards body, the World Wide Web Consortium (W3C)} that promotes common data formats on the world wide web by encouraging semantic content in web pages. W3C's "Semantic Web Vision" is a future where: 
+The Semantic Web is a collaborative movement led by W3C\footnote{The international standards body, the World Wide Web Consortium (W3C)} that promotes common data formats on the world wide web by encouraging semantic content in web pages.\cite{semWebBib} W3C's "Semantic Web Vision" is a future where: 
 \begin{itemize}
 \item Web information has exact meaning
 \item Web information can be understood and processed by computers
@@ -14,7 +14,7 @@ meaning of a text. If someone ask me  "Do you know Zlatan?" they may refer to if
 The semantic web is a web of data, where the data can be stored in documents in various ways. Using RDF is a way to structure data, so that it can be linked to other data with information and realations to objects.
 
 \subsection{RDF}
-Resource Description Framwork (RDF) is a general method to describe or model information that is implemented in web resources. It is based upon the idea of making statements about resources in the form of triples of subject-predicate-object. The subject denotes the resource (it can be anything that can have a URI), the predicate denotes traits or aspects of the resource and also expresses a relationship between the subject and the object. For example: "The sky" (subject) "has the color" (predicate) "blue" (object) could be an RDF triple.\\\\
+Resource Description Framwork (RDF) is a general method to describe or model information that is implemented in web resources. It is based upon the idea of making statements about resources in the form of triples of subject-predicate-object.\cite{rdfIntroBib} The subject denotes the resource (it can be anything that can have a URI), the predicate denotes traits or aspects of the resource and also expresses a relationship between the subject and the object. For example: "The sky" (subject) "has the color" (predicate) "blue" (object) could be an RDF triple.\\\\
 Let's take a look at an example\footnote{Full example can be viewed at \url{http://www.w3schools.com/rdf/rdf_example.asp}} of an RDF object describing two CDs.\\
 \begin{minted}[bgcolor=bg, label=XML example]{xml}
 <?xml version="1.0"?>
@@ -46,8 +46,8 @@ Let's take a look at an example\footnote{Full example can be viewed at \url{http
 The two lines at the top, \textbf{xmlns:rdf} and \textbf{xmlns:cd} define from which namespace elements with the rdf and cd prefix are from. The \textbf{rdf:Description} element contains the description of the resource identified by the \textbf{rdf:about} attribute. Finally the elements \textbf{cd:artist, cd:country, cd:company} etc. are properties of the resource.
 
 \section{RDFa}
-RDFa is a syntax for embedding an RDF graph in an XHTML document by using XHTML attributes for expressing RDF properties. It was proposed by Mark Birbeck in the form of a W3C note entitled XHTML and RDF\footnote{Bibliography [2] "XHTML and RDF W3C Note 14 February 2004". World Wide Web Consortium. 2004-02-14. Retrieved 2007-12-27.}.\\\\
-RDFa is based on attributes that are used to carry metadata in an XML/HTML/XHTML language. There are some attributes that have been reused, for example “href” and “src” that comes from the HTML syntax. Then there is also a set of new attributes that are specified for RDFa, the attributes are: 
+RDFa is a syntax for embedding an RDF graph in an XHTML document by using XHTML attributes for expressing RDF properties. It was proposed by Mark Birbeck\footnote{\url{http://markbirbeck.com/}} in the form of a W3C note entitled XHTML and RDF\cite{rdfaBib}.\\\\
+RDFa is based on attributes that are used to carry metadata in an XML/HTML/XHTML language. There are some attributes that have been reused, for example “href” and “src” that comes from the HTML syntax. Then there is also a set of new attributes that are specified for RDFa, the attributes are:\cite{rdfaBib2}
 \begin{itemize}
 \item \textbf{about} - A URI specifying the resource the metadata is about
 \item \textbf{rel and rev} - A relationship and reverse-relationship with another resource, respectively
@@ -73,35 +73,35 @@ Essentially what we are trying to do is to bridge the gap between what the compu
 
 \section{Linked Data - Connect data across the Web}
 The Semantic Web isn't just about putting data on the web. It is about creating connections through links, so that when you have some of it, you can find other, related, data.\\\\
-The term Linked data describes a method of publishing structured data so that it can be interlinked and become more useful. This is done by following a data model which is based on resources and that describe their properties, including relationships to other resources. By using standardized names for resources and property types, data sets from many different providers integrated. By expressing the relationships between resources in different data sets, a user may discover additional relevant data.\\
-The foundation of linked data are the technologies HTTP and URIs. Today we use them (and many other services) to present human readers with web pages, linked data extends this to share information in a way that can be read, connected and queried automatically by computers. This is as a concept is not new, and have been used in other similar situations such as database network models and headings in library catalogs.\\\\
-Tim Berners-Lee,\footnote{TODO: add src on Tim} the father of the World Wide Web coined the term \textit{“Linked Data”} and outlined four principles of linked data:
+The term Linked data describes a method of publishing structured data so that it can be interlinked and become more useful.\cite{semanticIntroBib}\cite{linkEssBib} This is done by following a data model which is based on resources and that describe their properties, including relationships to other resources. By using standardized names for resources and property types, data sets from many different providers integrated. By expressing the relationships between resources in different data sets, a user may discover additional relevant data.\\
+The foundation of linked data are the technologies HTTP and URIs. Today we use them (and many other services) to present human readers with web pages, linked data extends this to share information in a way that can be read, connected and queried automatically by computers. This is as a concept is not new, and have been used in other similar situations such as database network models and headings in library catalogs.\cite{LinkedTimBib}\\\\
+Tim Berners-Lee,\footnote{\url{http://en.wikipedia.org/wiki/Tim_Berners-Lee}} the father of the World Wide Web coined the term \textit{“Linked Data”} and outlined four principles of linked data:\cite{LinkedTimBib2}
 \begin{enumerate}
 \item{Use URIs to identify things.}
 \item{Use HTTP URIs so that these things can be referred to and looked up ("dereferenced") by people and user agents.}
 \item{Provide useful information about the thing when its URI is dereferenced, using standard formats such as RDF/XML.}
 \item{Include links to other, related URIs in the exposed data to improve discovery of other related information on the Web.}
 \end{enumerate}
-A community project called \textit{Linking Open Data\footnote{WC3 Semantic Web Education and Outreach group's - Linking Open Data community project}}, organized by W3C aims to extend the Web by publishing various open datasets as RDF on the Web by creating RDF links between data items from different data sources. In October 2007, the datasets consisted of over two billion\footnote{TODO: Add src} RDF triples, which were interlinked by over two million RDF links. By September 2011 this had grown to 31 billion RDF triples, interlinked by around 504 million RDF links.\\\\
+A community project called \textit{Linking Open Data\footnote{WC3 Semantic Web Education and Outreach group's - Linking Open Data community project}}, organized by W3C aims to extend the Web by publishing various open datasets as RDF on the Web by creating RDF links between data items from different data sources. In October 2007, the datasets consisted of over two billion\footnote{\url{http://www.w3.org/wiki/SweoIG/TaskForces/CommunityProjects/LinkingOpenData}} RDF triples, which were interlinked by over two million RDF links. By September 2011 this had grown to 31 billion RDF triples, interlinked by around 504 million RDF links.\\\\
 The image below shows datasets that have been published in Linked Data format, by contributors to the Linking Open Data community project and other individuals and organizations. The purpose of this image is merely to depict the extent of such a project, not to present the details of the data sets.\footnote{See \url{http://lod-cloud.net/} for a more detailed image with links to all the contributors.}
 \begin{center}
 \includegraphics[scale=0.6]{../imgs/lod-datasets.png}
 \captionof{figure}{Linking Open Data cloud diagram, by Richard Cyganiak and Anja Jentzsch.}
 \end{center}
-Linked data is essential to actually connect the semantic web, common sense considerations determine when to make a link and when not to.
+Linked data is essential to actually connect the semantic web, common sense considerations determine when to make a link and when not to.\cite{publishBib}
 
 \section{Swedish law}
-The main legislative powers are the parliament (Riksdagen) and the government (Regeringen), these institutions can adopt statutes which are published in the main official collection of statutory law, the \textit{Svensk Författningssamling} (SFS). The statutes enacted by the parliament are referred to as laws, and the statutes enacted by the government as ordinances.\\\\
+The main legislative powers are the parliament (Riksdagen) and the government (Regeringen), these institutions can adopt statutes which are published in the main official collection of statutory law, the \textit{Svensk Författningssamling} (SFS). The statutes enacted by the parliament are referred to as laws, and the statutes enacted by the government as ordinances.\cite{lagrumBib}\\\\
 When a statute is changed, this is done by adopting a new statute (the change statute) that states what sections of the old statute (the base statute) are to be changed, and how. There is not a new merged version published of the statute in SFS, only the base statute and change statute(s).\\\\
 Two recurring definitions in this paper are legal sources and legal source documents. A legal source is a type of legal information such as a constitution in SFS or verdicts from one of the Swedish courts. A legal source document is a specific document for a certain legal source, such as \textit{Personuppgiftslagen} (SFS 1998:204). 
 \subsection{Law structure}
-Today there's 3000 constitutions but there's no well defined structure that describes how a law should look like. One thing that is common is that each law has an SFS number, including legislations amending already existing laws. The SFS number consists of a four digit year, a colon and a serial number assigned in chronological order of the date of issue. 
+Today there's 3000\footnote{Actually there's some 8000 statutes but many of them are change statutes so only around 3000 are active.} constitutions but there's no well defined structure that describes how a law should look like. One thing that is common is that each law has an SFS number, including legislations amending already existing laws. The SFS number consists of a four digit year, a colon and a serial number assigned in chronological order of the date of issue. 
 
 \subsection{Rättsinformationssystemet}
 \textit{Rättsinformationssystemet} is the state's system to make legal information such as laws, legislative histories, court cases, etc. - available to the public via the Internet. This information is produced by a number of different authorities. Today, each agency is responsible for publishing "their" information via their own website. It is all tied together by the website \url{http://www.lagrummet.se} which is referring to each agency's respective legal information page.\\
 This decentralized approach has its advantages. It gives the authorities a lot of freedom to design their information in a way that fits them. A downside is that they use this freedom to invent their own standards. \textit{Rättsinformationsförordningen}\footnote{Rättsinformationssystemet is regulated in this ordinance (1999:175)} is not very detailed on how the information should be presented, only that it should be published.\\\\
 An additional purpose with the system is the ability for the private sector to re-use government information to create added value services\footnote{Services like Rättsnätet from Notisum and lagen.nu}. Legal information is of great value, that could be even better utilized if it was easier to re-use the information.\\\\
-The project’s aim is to establish a central place where all legal documents can be searched and retrieved. To achieve this all authorities that are publishing legal documents need to share a common technical standard and use well-defined metadata terms. The project imagines  the end-product to look something like the figure\footnote{The figure is from rättsinformationprojektets website \url{http://dev.lagrummet.se/dokumentation/}} below. 
+The project’s aim is to establish a central place where all legal documents can be searched and retrieved. To achieve this all authorities that are publishing legal documents need to share a common technical standard and use well-defined metadata terms.\cite{lagrumBib2} The project imagines  the end-product to look something like the figure\footnote{The figure is from rättsinformationprojektets website \url{http://dev.lagrummet.se/dokumentation/}} below. 
 \begin{center}
 \includegraphics[scale=0.6]{../imgs/rinfo.png}
 \captionof{figure}{Rättsinformationsprojektet - A central place for legal information }

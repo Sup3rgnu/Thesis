@@ -1,7 +1,7 @@
 \chapter{Introduction}
 \section{Legal information online}
 
-According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided both the public administration, and to private individuals in electronic form. For example the collection of statutory law, the \textit{Svensk Författningssamling} (SFS) is published in the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.
+According to \textit{Rättsinformationsförordningen} (1999:175) basic legal information has to be provided bot to the public administration, and to private individuals in electronic form.\footnote{\url{http://www.notisum.se/rnp/sls/lag/19990175.htm}} For example the collection of statutory law, the \textit{Svensk Författningssamling} (SFS) is published in the Government Offices legal databases. These databases are old and hard to navigate since they only consist of plain text documents.\cite{regeringBib}
 
 \section{Uniform standards}
 One of the goals with \textit{Rättsinformationsförordningen} is that all legal information should be coherent, 
@@ -10,7 +10,7 @@ authorities are responsible for their own documents, leads to a couple of proble
 the documents don’t follow the same format standards.\\\\ 
 In 2006 a project called \textit{Rättsinformationsprojektet} was commenced to develop the legal information system further. 
 A first step was to assure that the document that is going to be published contains the required meta data 
-for that type of document. The next step is to assure that the information is delivered in a correct format.\footnote{Guidelines for publisher, developers etc are found on \url{http://www.lagrummet.se}} For example, date data must be unambiguously expressed in machine-readable form. 
+for that type of document. The next step is to assure that the information is delivered in a correct format.\footnote{Guidelines for publisher, developers etc are found on \url{http://dev.lagrummet.se/dokumentation/}} For example, date data must be unambiguously expressed in machine-readable form. 
 
 \section{Rättsnätet} Rättsnätet is a free web service on
 \url{www.notisum.se}\footnote{Notisum AB is the company that I am writing this thesis at.} that provides legal
@@ -20,22 +20,22 @@ into a rich XML file. Notisum also provides a premium service that includes
 additional information and services.
 
 \section{Lagen.nu}
-A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats on the World Wide Web.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}.\\\\
-The source code is open source\footnote{Link to lagen.nu’s license file \url{http://svn.lagen.nu/svnroot/trunk/LICENSE}} and the author encourages the use and reuse of it. I have gained a lot of inspiration from that code and in terms of architecture I have reused parts of it. 
+A similar website to Notisum is lagen.nu, they also provide all Swedish laws as a free web service. A difference is that lagen.nu follows standards regarding the Semantic Web\footnote{The Semantic Web is a collaborative movement that promotes common data formats and meaningful data online.} in a better way than Notisum's Rättsnätet does. Lagen.nu is created by an individual with voluntary interest in law, the Semantic Web and is also involved in \textit{rättsinformationsprojektet}.\\\\
+The source code is open source\footnote{Link to lagen.nu’s license file \url{http://svn.lagen.nu/svnroot/trunk/LICENSE}} and the author encourages the use and reuse of it. I have gained a lot of inspiration from that project and in terms of architecture I have reused parts of it. 
 
 \section{Problem}
-Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Delphi Pascal and C\#. These programs, especially those that have been written in Delphi Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
-Instead of using compiler technology lagen.nu use regular expressions to parse legal documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Delphi Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
+Today Rättsnätet use processing steps that downloads, analyzes and transforms authority information from plain text to structured and marked up XML information. This process is a collection of programs written in Pascal and C\#. These programs, especially those that have been written in Pascal, are old and difficult to maintain. The conversion parts are constructed using a traditional technique similar to that used to write compilers.\\\\
+Instead of using compiler technology lagen.nu use regular expressions to parse legal documents. The conversion programs lagen.nu use are written in object-oriented Python, which is more suitable for the task than Pascal that Notisum use today. Additionally lagen.nu is based on a document model from the Semantic Web, with the Resource Description Framework, RDF, as a base. Because of this the code base in lagen.nu has greater flexibility and is more about standards than Notisum.\\\\
 The problem that this thesis focus on is how to modernize and replace Rättsnätet's current platform to a more modern process. A process where the result should be based on the Semantic Web and follow standards proposed by Rättsinformationsprojektet. Some aspects of the problem to keep in mind are:
 \begin{itemize} 
 \item The amount of documents, since there is over 200.000 legal documents, the program requires a fast process.
 \item Legal source texts contains references that should be interpreted differently depending on the context, and to be marked up automatically with a certain margin of error.
 \item Cross-references between the 200,000+ documents require theoretically, an array of 40 billion nodes.
-\item The output from the process needs to be structurally similar to Notisums current process output so the post process (generating html) can be used with as little tweaking as possible.
+\item The output from the process needs to be structurally similar to Notisums current process output so the post process (generating html to publish to endusers) can be used with as little tweaking as possible.
 \end{itemize}
 
 \section{Limitations}
-The implementation part of the thesis will be limited to the parsing step of the process. It will not cover the downloading or final transformation to html that is ready to be published.\\
+The implementation part of the thesis will be limited to the parsing step of the process. It will not cover the downloading or the final transformation to html that is ready to be published.\\
 To make this project feasible it is limited to handling only SFS data. Other types of data sources that a complete process would need to handle are for example: 
 \begin{itemize}
 \item Propositions
@@ -91,7 +91,7 @@ describe or model information that is implemented in web
 resources\footnote{More detailed information about RDF in the ‘Background’
 section}.
 
-\subsection*{RDFa} Resource Description Framework - in - attributes (RDFa) provides a syntax, which basically is a set of attributes to for expressing RDF properties in HTML, XHTML and XML documents.
+\subsection*{RDFa} Resource Description Framework - in - attributes (RDFa) provides a syntax, which basically is a set of attributes for expressing RDF properties in HTML, XHTML and XML documents.
 
 \subsection*{UTF-8} A encoding that can represent every character in the
 Unicode character set. UTF-8 has become the dominant character encoding for
@@ -109,7 +109,7 @@ readable than XML RDF notation.
 \subsection*{Dublin Core}
 The Dublin Core metadata terms are a set of vocabulary terms which
 can be used for simple resource description, or combining metadata
-vocabularies of different metadata standards in Semantic web implementations.
+vocabularies of different metadata standards in Semantic web implementations.\cite{dublinBib} 
 
 \subsection*{The Semantic Web}
-The word semantic stands for "the meaning of". The semantic of something is the meaning of something. The Semantic Web = a Web with a meaning.
+The word semantic stands for "the meaning of". The semantic of something is the meaning of something. The Semantic Web = a Web with a meaning.\footnote{Intro to the Semantic Web (helpful video) \url{http://www.youtube.com/watch?v=OGg8A2zfWKg}}

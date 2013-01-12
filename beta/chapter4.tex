@@ -27,7 +27,7 @@ The controller handles validation of user input (arguments and flags) if everyth
 
 \subsection{Source.py}
 This module is a blueprint of how modules inheriting from it needs to look like. It contains the base classes for Controller and Parser, these classes contains functions that child classes need to implement and functions that can be overridden. Example of general functions are: checking if a file is up-to-date, trimming filenames or returning the XML or XHTML name for a certain file.\\
-However most of the code will be specific for each legal source type and be implemented in the child modules. To support a new type of legal source for example 'EG Court cases'\footnote{European.. TODO}, create an 'EG' module that inherits Source.Controller and Source.Parser, that is all that is needed for it to function with the rest of the program.
+However most of the code will be specific for each legal source type and be implemented in the child modules. To support a new type of legal source for example 'EG Court cases'\footnote{The Court of Justice of the European Union \url{http://curia.europa.eu/jcms/jcms/j_6/}}, create an 'EG' module that inherits Source.Controller and Source.Parser, that is all that is needed for it to function with the rest of the program.
 
 \subsection{SFS.py}
 This is the module specific for SFS documents, basically it takes a list of all the downloaded files\footnote{The path to the base directory is specified in a config file, then it appends a path like ‘/sfs/dl/sfsr/1997’ for example for all SFS full text documents from 1997} and parse the files one by one.\\
@@ -54,7 +54,7 @@ initialized, it can find different types of references (Other laws,
 'Rättsfall', 'EG-lagstiftning' etc..).
 
 \subsection{TextReader.py}
-A helper class to read text files in different ways, by line, paragraph etc.  
+A helper class to read text files in different ways, by line, paragraph etc.\cite{pythonBib}  
 
 \subsection{Util.py}
 
@@ -62,7 +62,7 @@ A few small help functions mostly related to checking and or renaming directorie
 
 \section{Unicode}
 
-Unicode is a standard for consistent encoding, representation and handling of text. It can be implemented by different character encodings\footnote{Example of common character encodings are, UTF-8 and ISO-8859-1, see the vocabulary in chapter 1 for more info.}.\\
+Unicode is a standard for consistent encoding, representation and handling of text. It can be implemented by different character encodings\cite{uriBib}\footnote{Example of common character encodings are, UTF-8 and ISO-8859-1, see the vocabulary in chapter 1 for more info.}.\\
 Python’s Unicode string type stores characters from the Unicode character set. Unicode characters don’t have an encoding; each character is represented by a number which is called its code point. However we work with text files, which contains encoded text, not characters. Each character in the text is encoded as one or more bytes in the file. If you read a line of text from a file, you get bytes, not characters.\\
 To solve this, we need to decode the text strings that we read from files, to do this, we can use Python’s \textbf{decode()} method on the string, and pass it the name of the encoding like so:\\
 

@@ -28,7 +28,7 @@ All files connected to this file:
 We then transform and trim the file names so that they will be on the format '1997/146' instead of '../1997/146.html'. The actual parsing step then begins if the file met these three requirements:
 \begin{enumerate}
 \item If we have the file parsed already and it is newer than the incoming raw file, don't parse it again.
-\item Filter out documents that are not proper SFS documents. They will have a name like ‘N1992:31’\footnote{TODO: Explain why.}
+\item Filter out documents that are not proper SFS documents. They will have a name like ‘N1992:31’\footnote{It happens that other agencies publish documents to SFS, this is handled by giving them a SFS number preceded with an ‘N’}
 \item Skip parsing the documents that have been or will be revoked, they are marked as \textit{“The constitution is repealed / shall be repealed”}\footnote{“Författningen är upphävd/skall upphävas”}
 \end{enumerate}
 The parsing begins with creating a SFS specific Parser, that has a set of properties and rules defined such as regular experssions created for parsing SFS statutes. Like this regular expression for matching a SFS number:\\
@@ -37,30 +37,30 @@ $
 reSimpleSfsId = re.compile(r'(\d{4}:\d+)\s*$')
 \end{minted}
 \linebreak
-The raw string ('r') notation keeps the regular expression clean, without it every backslash would have to be prefixed with another on to escape it. Then we are looking for four (4) digits followed by a colon(:) and one (1) or more digits. The 's' at the end is there to match white spaces (behaves differently with or without the unicode flag turned on). Finally the dollar sign (\$) states that the match have to be the end of the string. The other regular expressions are created in a similar fashion, in total there are about 30 expression matching everything from chapter ids and numbered lists to the definition of a revoked date.\\\\  
+The raw string ('r') notation keeps the regular expression clean, without it every backslash would have to be prefixed with another on to escape it. Then we are looking for four (4) digits followed by a colon(:) and one (1) or more digits. The 's' at the end is there to match white spaces (behaves differently with or without the unicode flag turned on). Finally the dollar sign (\$) states that the match have to be the end of the string. The other regular expressions are created in a similar fashion, in total there are about 30 expression matching everything from chapter ids and numbered lists to the definition of a revoked date.\cite{regexpBib}\\\\  
 When the SFSParser class is initialized and have all it’s properties created, we can divide the parsing into two steps. One where we handle the register file (SFSR) and one for the full text (SFST). We begin with creating a registry with \textit{registerposts} containing meta information and other information regarding changes to the statute.\\ 
 \begin{minted}[bgcolor=bg]{python}
 Registerpost: 
-{u'Ansvarig myndighet': Link('u'F\xf6rsvarsdepartementet'',
+{u'Ansvarig myndighet': Link('u'Forsvarsdepartementet'',
 	uri=u'http://lagen.nu/org/2008/forsvarsdepartementet'), 
  u'Ikraft': DateSubject(1997, 7, 1), 
  u'SFS-nummer': u'1997:146'}
 
 Registerpost: 
 {u'Omfattning': [
-	u'\xe4ndr. ', 
+	u'andr. ', 
 	Link('u'1 \xa7'',
 	uri=u'http://rinfo.lagrummet.se/publ/sfs/1997:146#P1')],
  u'Ikraft': DateSubject(2012, 7, 16), 
- u'Rubrik': u'F\xf6rordning (2012:334) om \xe4ndring i 
-	hemv\xe4rnsf\xf6rordningen (1997:146)', 
+ u'Rubrik': u'Forordning (2012:334) om andring i 
+	hemvarnsforordningen (1997:146)', 
  u'SFS-nummer': u'2012:334'}
 \end{minted}
 \linebreak
 \newline
 The first registerpost created for 1997:146 describes basic properties such as responsible authority, entry into force and SFS number. The second\footnote{There's actually three register posts for 1997:146, I left a 'change post' out to save space} registerpost states that there has been some changes to the statute. We can find out if it is a change or if some part has been revoked\footnote{Omfattning can be for example "Change" or "Revoked" ("Ändr." or "Upph.")}, also we can see the force into entry and the change statute's SFS number. All these values are represented with different data types discussed in the 'Implementation' section, for ex. 'Link', 'DateSubject' or a unicode 'u' string.\\\\
 The second part is to deal with the full text part of the statute, we do this by creating an intermediate text file with just the raw\footnote{It is not the complete downloaded file, we get rid of the "HTML" mark up of the document so that we only have text.} text. This file is saved in a directory called 'intermediate' on the same level as the downloaded, 'dl' directory in the file tree structure. \\\\ 
-The file we have downloaded consist of a header\footnote{See bilaga X for example input file.} with information similar to the register file. We could probably reuse some information\footnote{SFS number and responsible authority could be reused for example.} but we have everything set up for parsing and it is a fairly simple procedure so we go ahead and save it again. This information will be part of the header in the HTML file when that is created later on. For the information in the header we create a corresponding object, in the example below we create \textit{UnicodeSubjects}\footnote{We will look closer at this in the next section 'RDF markup'}, with the values \textit{SFS number} and \textit{Headline}, their predicates will be an URI to that object's definition.\\
+The file we have downloaded consist of a header with information similar to the register file. We could probably reuse some information\footnote{SFS number and responsible authority could be reused for example.} but we have everything set up for parsing and it is a fairly simple procedure so we go ahead and save it again. This information will be part of the header in the HTML file when that is created later on. For the information in the header we create a corresponding object, in the example below we create \textit{UnicodeSubjects}\footnote{We will look closer at this in the next section 'RDF markup'}, with the values \textit{SFS number} and \textit{Headline}, their predicates will be an URI to that object's definition.\\
 \begin{minted}[bgcolor=bg]{python}
 if key == u'Rubrik':
 	meta[key] = UnicodeSubject(val, predicate=self.labels[key])
@@ -76,7 +76,7 @@ val:1997:146
 self.labels[key]:
 	http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#fsNummer
 key:Rubrik
-val:Hemvransforordning (1997:146)
+val:Hemvarnsforordning (1997:146)
 self.labels[key]:
 	http://purl.org/dc/terms/title
 \end{minted}
@@ -133,7 +133,7 @@ class PredicateType(object):
 \end{minted} 
 \linebreak
 \newline
-When the object is initialized we compare the predicate's URI to some common name spaces that we have stored, if that is the case we can swap the long URI for a much shorter prefix. In our case with the SFS number and the headline we can substitute the title's URI \url{http://purl.org/dc/terms/title} for simply 'dct:title' and \url{http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#fsNummer} becomes 'rinfo:fsNummer'. Below we find part of the name space list, as we can see we can reuse definitions that are already defined by large international organisations, it is only 'rinfo' that is specific "Swedish-legal" definition.     
+When the object is initialized we compare the predicate's URI to some common name spaces that we have stored, if that is the case we can swap the long URI for a much shorter prefix. In our case with the SFS number and the title we can substitute the title's URI '\url{http://purl.org/dc/terms/title}' for simply 'dct:title' and '\url{http://rinfo.lagrummet.se/taxo/2007/09/rinfo/pub#fsNummer}' becomes 'rinfo:fsNummer'. Below we find part of the name space list, as we can see we can reuse definitions that are already defined by large international organisations, it is only 'rinfo' that is specific "Swedish-legal" definition.     
 \begin{minted}[bgcolor=bg]{python}
 # Common namespaces and prefixes for them
 ns = {
@@ -222,7 +222,7 @@ The first part of the document is inside the <head> element of the document, it 
 \newline
 
 \subsection{Document body - Full text}
-The second part of the document is the body, which consists of four parts itself, with the statutes title being the first.\\
+The second part of the document is the body, which consists of four parts itself, with the statute's title being the first.\\
 \begin{minted}[bgcolor=bg]{html}
 <h property="dct:title">Hemvarnsforordningen (1997:146)</h>
 \end{minted}
@@ -311,10 +311,10 @@ The vocabularies that are used are mainly, Dublin Core (dct) and Rättsinformati
 \item \textbf{dct:alternate} - A shorter prefix, ex “TF” for “Tryckfrihetsförordningen”
 \item \textbf{dct:reference} - Used for references to another document. 
 \end{itemize}
-The other vocabulary, \textit{rinfo} is provided by Rättsinformationsprojektet\footnote{More information regarding Rättsinformationsprojektet's URI principles see \url{http://dev.lagrummet.se/dokumentation/system/uri-principer.pdf}}. It includes definitions such as "Ikrafttradandesdatum", "ersatter", "paragrafnummer" and other attributes that are specific to legal documents. A conceptual model that describes the document types, properties and other related matters that are Swedish Legal Information can be found in Rättsinformationsprojektets documentation \url{http://dev.lagrummet.se/dokumentation/model.pdf}\\\\
+The other vocabulary, \textit{rinfo} is provided by Rättsinformationsprojektet\footnote{More information regarding Rättsinformationsprojektet's URI principles see \url{http://dev.lagrummet.se/dokumentation/system/uri-principer.pdf}}. It includes definitions such as "Ikrafttradandesdatum", "ersatter", "paragrafnummer" and other attributes that are specific to legal documents. A conceptual model that describes the document types, properties and other related matters that are Swedish Legal Information can be found in Rättsinformationsprojektet's documentation\footnote{Documentation in pdf format, \url{http://dev.lagrummet.se/dokumentation/model.pdf}}\\\\
 
 \subsubsection{RDF Triples}
-If we extract RDF data from the output document, which is possible with for example RDFa Distiller\footnote{RDFa Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are some of the triples we have looked at above in N3-format\footnote{TODO: More about Notation 3 format)}.\\
+If we extract RDF data from the output document, which is possible with for example RDFa Distiller\footnote{RDFa Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are a couple of the resulting triples from the examples we have looked at earlier, displayed in N3-format.\cite{n3Bib}\\
 \begin{minted}[bgcolor=bg]{xml}
 <http://rinfo.lagrummet.se/publ/sfs/1997:146#P1S1> 
 <http://purl.org/dc/terms/isPartOf>
@@ -326,40 +326,45 @@ If we extract RDF data from the output document, which is possible with for exam
 \end{minted}
 \linebreak
 \newline
-The first triple is stating that “P1S1 is a part of P1” that is, "Paragraph 1, Section 2" is a part of "Paragraph 1" which makes sense to a human reader but now it is also understandable to a computer. The second triple states that “P1S2 is a reference to L2012:334”, in this case, Paragraph 1, section 2 has been revoked and replaced with a new statute, 2012:334. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the the different parts, how they are connected and where to find more information about them.
+The first triple is stating that “P1S1 is a part of P1” that is, "Paragraph 1, Section 2" is a part of "Paragraph 1" which makes sense to a human reader but now it is also understandable to a computer. The second triple states that “P1S2 is a reference to L2012:334”, in this case, Paragraph 1, section 2 has been revoked and replaced with a new statute, 2012:334. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the different parts, how they are connected and where to find more information about them.
 
 \section{Performance}
-Here are some numbers collected when running the parsing step, XHTML generation step and total running time.\\\\
+Here are some numbers regarding performance, collected when running the parsing step, HTML generation step and total running time.\\\\
 Computer specifications for benchmark:\\\\ 
-\begin{tabular}{l l}
-Make & Dell\\
-Model & Vostro V13 (laptop)\\
-Processor & Intel Celeron CPU 743 @ 1.30 GHz\\
-Memory & 1.9 GiB\\
-OS & Ubuntu 12.04 32-bit\\
+\begin{tabular}{l l l}
+\textbf{Make} & Dell & Apple\\
+\textbf{Model} & Vostro V13 & MacBook Pro\\
+\textbf{Processor} & Intel Celeron CPU 743 @ 1.30 GHz & Intel Quad-Core i7 @ 2,6 GHz \\
+\textbf{Memory} & 1.9 GB & 16 GB\\
+\textbf{OS} & Ubuntu 12.04 32-bit & Mac OS X Mnt Lion\\
 \end{tabular}
 \linebreak
 \newline
-TODO: Add new numbers / charts with complete timings, and compare to a faster computer.\\\\
-
+To ensure that the performance is not disturbed by any other processes it has been run at night with all other programs shut down.
 \subsection{Parsing}
-\begin{tabular}{l l}
-Number of statutes parsed & 1215\\
-Average running time	& 2.42s\\
-Max running time &  67.25s\\
-Min running time & 0.99s\\
-\textbf{Total running time} & 2935s / 48min 55s\\
+The main focus of the thesis is the parsing and that is obviously the most time consuming part of the process. As we can see from these numbers and what becomes even more clear in the charts below, most of the statutes are parsed very fast, the average running time is less than three seconds. There are a few statutes that are very slow that makes up most of the total running time.\\\\
+\begin{tabular}{l l l}
+\textbf{Computer} & \textbf{Dell Vostro} & \textbf{MacBook Pro}\\
+Nr of statutes parsed & 3433 & 1000\\
+Average running time	& 2.53s & 2.10s\\
+Max running time &  113.79s & 65.15s\\
+Min running time & 0.97s & 0.89s\\
+\textbf{Total parsing time} & 8700.59s / 2hrs 25min & 8424s / 2hrs 12min\\
 \end{tabular}
 \linebreak
 \newline
-As we can see from these numbers and what becomes even more clear in the charts below, most of the statutes are parsed very fast, the average running time is less than three seconds. There are a few statutes that are very slow that makes up most of the total running time.\\\\
+Because of the number of statutes I will only show a graph depicting the statutes from a few years (1942, 1967, 2005 and 2006)\footnote{These years are picked randomly, a couple more recent and a couple older years to get a good variation} to get a meaningful graph. The purpose of the graph is to visualize that most statutes parse fast and few ‘heavy’ statutes comprise the majority of the time.\\\\
 \includegraphics[scale=0.6]{../imgs/time_parse1.png}
 \captionof{figure}{Chart showing running times for parsing step}
-\includegraphics[scale=0.6]{../imgs/time_parse2.png}
-\captionof{figure}{Chart showing running times for parsing step zoomed in to 10 seconds}
-The statute that took the longest time (67 sec) is \textit{Rättegångsbalken} (1942:740) which consist of 59 chapters and more than 100 change statutes, hence it takes a lot of time to mark up all that text.
+The statute that took the longest time (67 sec) is \textit{Rättegångsbalken} (1942:740) which consist of 59 chapters and more than 100 change statutes, hence it takes a lot of time to go through and mark up all that text.
 
 \subsection{Generating XHTML}
 TODO
 \subsection{Total running time}
-TODO
+Here we have the timings for the different parts of the program and the total running time.\\\\
+\begin{tabular}{l l l}
+\textbf{Computer} & \textbf{Dell Vostro} & \textbf{MacBook Pro}\\
+Total parsing time & 8700.59s & 1000\\
+Total generation time & 1000s & 1000\\
+\textbf{Total running time} & 8953.59s & 1000\\
+\end{tabular}
