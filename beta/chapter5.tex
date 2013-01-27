@@ -155,7 +155,7 @@ This way we can mark up our legal documents with short prefixes that makes the d
 \linebreak
 \newline
 \subsection{Generating XHTML}
-The way we are going to represent the parsed and marked up statute is as a XHTML file (in a later step we can transform the XHTML files to HTML to be able to display them to users in a browser). One of the reasons that the XHTML format is used is that through its extensibility and its focus on document structure works well to represent legal documents in a semantically meaningful way.\\
+The way we are going to represent the parsed and marked up statute is as a XHTML file (in a later step we can transform the XHTML files to HTML to be able to display them to users in a browser). One of the reasons that the XHTML format is used is that through its extensibility and its focus on document structure it works well to represent legal documents in a semantically meaningful way.\\
 To create an XHTML representation of the parsed statute we use a third party library called \textit{Genshi}\footnote{See the 'Implementation' section for more information regarding third party libs.}. We use Genshi's "TemplateLoader" to load a template we have created that specifies how we want our XHTML file to look like, ex. which values goes where etc. A nice feature with Genshi is that it uses a Stream-based filtering\footnote{\url{http://genshi.edgewall.org/wiki/Documentation/filters.html}} that allows us to apply various transformations as a template is being processed, without having to parse and serialize the output again.\\\\
 Below is an example of how the template file renders a headline. As the code
 snippet shows there is two <h> tag templates to chose from, one if it is a "normal" headline and one if it is an sub headline, then an extra class is added to the tag.\\
@@ -169,10 +169,6 @@ snippet shows there is two <h> tag templates to chose from, one if it is a "norm
 \end{minted}
 \linebreak  
 \newline
-TODO: Describe more what it does.\\
-\subsection{Bonus - Generating HTML}
-Not part of the thesis, but an example implementation using XSL transformation, a look at the final output.\\\\
-TODO 
 
 \section{Output}
 The output we get in form of a XHTML document consists of two parts a <head> and a <body> as normal HTML document. We are going to look at those parts\footnote{I will only show parts of the resulting XHTML document here to save space and to focus on some of the interesting parts. The full document can be found in the appendix.} to see what we ended up with after parsing and marking up our statute. \\\\
@@ -311,7 +307,7 @@ The vocabularies that are used are mainly, Dublin Core (dct) and Rättsinformati
 \item \textbf{dct:alternate} - A shorter prefix, ex “TF” for “Tryckfrihetsförordningen”
 \item \textbf{dct:reference} - Used for references to another document. 
 \end{itemize}
-The other vocabulary, \textit{rinfo} is provided by Rättsinformationsprojektet\footnote{More information regarding Rättsinformationsprojektet's URI principles see \url{http://dev.lagrummet.se/dokumentation/system/uri-principer.pdf}}. It includes definitions such as "Ikrafttradandesdatum", "ersatter", "paragrafnummer" and other attributes that are specific to legal documents. A conceptual model that describes the document types, properties and other related matters that are Swedish Legal Information can be found in Rättsinformationsprojektet's documentation\footnote{Documentation in pdf format, \url{http://dev.lagrummet.se/dokumentation/model.pdf}}\\\\
+The other vocabulary, \textit{rinfo} is provided by Rättsinformationsprojektet\footnote{More information regarding Rättsinformationsprojektet's URI principles see \url{http://dev.lagrummet.se/dokumentation/system/uri-principer.pdf}}. It includes definitions such as "Ikrafttradandesdatum", "ersatter", "paragrafnummer" and other attributes that are specific to legal documents. A conceptual model that describes the document types, properties and other related matters that are Swedish Legal Information can be found in Rättsinformationsprojektet's documentation\footnote{Documentation in pdf format, \url{http://dev.lagrummet.se/dokumentation/model.pdf}}
 
 \subsubsection{RDF Triples}
 If we extract RDF data from the output document, which is possible with for example RDFa Distiller\footnote{RDFa Distiller \url{http://www.w3.org/2007/08/pyRdfa/}} we get all the RDF Triples for the document. Here are a couple of the resulting triples from the examples we have looked at earlier, displayed in N3-format.\cite{n3Bib}\\
@@ -327,44 +323,51 @@ If we extract RDF data from the output document, which is possible with for exam
 \linebreak
 \newline
 The first triple is stating that “P1S1 is a part of P1” that is, "Paragraph 1, Section 2" is a part of "Paragraph 1" which makes sense to a human reader but now it is also understandable to a computer. The second triple states that “P1S2 is a reference to L2012:334”, in this case, Paragraph 1, section 2 has been revoked and replaced with a new statute, 2012:334. With all these triples telling us about all sorts of things in our document, it also possible for computers to understand the meaning of the different parts, how they are connected and where to find more information about them.
-
+\pagebreak
 \section{Performance}
-Here are some numbers regarding performance, collected when running the parsing step, HTML generation step and total running time.\\\\
+Even though performance is not the main focus of this thesis, it is still a part of it. As I stated in the problem statement, we are handling a lot of documents hence the program requires a fast process. The process has been tested on two computers\footnote{Note that I am not saying that the Mac is better than the Dell, I just happend to have a 2 years old Dell and a brand new Mac (also, the price differs with a about a factor of ten, so it should be faster no matter the brand.)} with quite different specifications, one pretty slow machine and one well above average (for a laptop). The result shows that the performance increases significantly\footnote{Almost all statutes parse in half the time on the Mac compared to the Dell} with a more powerful machine, which is positive since then it is not the case that the program itself is a limitation on how fast the process can run.\\\\
 Computer specifications for benchmark:\\\\ 
 \begin{tabular}{l l l}
 \textbf{Make} & Dell & Apple\\
 \textbf{Model} & Vostro V13 & MacBook Pro\\
-\textbf{Processor} & Intel Celeron CPU 743 @ 1.30 GHz & Intel Quad-Core i7 @ 2,6 GHz \\
+\textbf{Processor} & Intel Celeron 743 @ 1.30 GHz & Intel Core i7 @ 2,6 GHz \\
 \textbf{Memory} & 1.9 GB & 16 GB\\
-\textbf{OS} & Ubuntu 12.04 32-bit & Mac OS X Mnt Lion\\
+\textbf{OS} & Ubuntu 12.04 32-bit & Mac OS X 10.8\\
 \end{tabular}
 \linebreak
 \newline
-To ensure that the performance is not disturbed by any other processes it has been run at night with all other programs shut down.
-\subsection{Parsing}
-The main focus of the thesis is the parsing and that is obviously the most time consuming part of the process. As we can see from these numbers and what becomes even more clear in the charts below, most of the statutes are parsed very fast, the average running time is less than three seconds. There are a few statutes that are very slow that makes up most of the total running time.\\\\
-\begin{tabular}{l l l}
-\textbf{Computer} & \textbf{Dell Vostro} & \textbf{MacBook Pro}\\
-Nr of statutes parsed & 3433 & 1000\\
-Average running time	& 2.53s & 2.10s\\
-Max running time &  113.79s & 65.15s\\
-Min running time & 0.97s & 0.89s\\
-\textbf{Total parsing time} & 8700.59s / 2hrs 25min & 8424s / 2hrs 12min\\
-\end{tabular}
-\linebreak
-\newline
-Because of the number of statutes I will only show a graph depicting the statutes from a few years (1942, 1967, 2005 and 2006)\footnote{These years are picked randomly, a couple more recent and a couple older years to get a good variation} to get a meaningful graph. The purpose of the graph is to visualize that most statutes parse fast and few ‘heavy’ statutes comprise the majority of the time.\\\\
-\includegraphics[scale=0.6]{../imgs/time_parse1.png}
-\captionof{figure}{Chart showing running times for parsing step}
-The statute that took the longest time (67 sec) is \textit{Rättegångsbalken} (1942:740) which consist of 59 chapters and more than 100 change statutes, hence it takes a lot of time to go through and mark up all that text.
+To ensure that the performance is not disturbed by any other processes it has been run at night with all other programs shut down.\\
 
-\subsection{Generating XHTML}
-TODO
 \subsection{Total running time}
-Here we have the timings for the different parts of the program and the total running time.\\\\
+As we can see from these numbers collected when running all SFS statutes\footnote{All the statutes that should be marked up, that is statutes that are valid i.e. not revoked. The total number of documents that pass through the process are about twice as many as the ones that get marked up, this time is negligible, but of course included in the total running time.} and what becomes even more clear in the charts below, most of the statutes are parsed and marked up very fast, the average running time on the mac is just above one second. There are a few statutes that are very slow that makes up most of the total running time.\\\\
 \begin{tabular}{l l l}
 \textbf{Computer} & \textbf{Dell Vostro} & \textbf{MacBook Pro}\\
-Total parsing time & 8700.59s & 1000\\
-Total generation time & 1000s & 1000\\
-\textbf{Total running time} & 8953.59s & 1000\\
+Nr of statutes & 3424 & 3424\\
+Average running time	& 2.53s & 1.06s\\
+Max running time &  113.79s & 47.74s\\
+Min running time & 0.97s & 0.40s\\
+\textbf{Total running time} & 8700.59s / 2hrs 25min & 3721.26s / 1hrs 2 min\\
 \end{tabular}
+\linebreak
+\newline
+\subsection{Running time for selected statutes}
+Because of the number of statutes I will only show a graph depicting the statutes from a few years (1942, 1967, 2005 and 2006)\footnote{These years are picked randomly, a couple more recent and a couple older years to get a good variation} to get a meaningful\footnote{Now the graph is showing 270 statutes, it would be impossible to include all ~3400 in a graph of this size.} graph. The purpose of the graph is to visualize that most statutes parse fast and few ‘heavy’ statutes comprise the majority of the time.\\\\
+\begin{tabular}{l l l}
+\textbf{Computer} & \textbf{Dell Vostro} & \textbf{MacBook Pro}\\
+Nr of statutes & 270 & 270\\
+Average running time	& 3.15s & 1.24s\\
+Max running time &  71.98s & 28.71s\\
+Min running time & 1.04s & 0.41s\\
+\textbf{Total running time} & 860.59s & 337.79s\\
+\end{tabular}
+\linebreak
+\newline
+Below are the charts showing the statutes on the horizontal axis and the time in seconds on the vertical axis. The longer running times (blue) are from when the statutes were run on the Dell and the shorter ones (pink) on the Mac.\\\\ 
+\includegraphics[scale=0.35]{../imgs/parseBoth.png}
+\captionof{figure}{Chart showing running times for the selected statutes on both test computers}
+\pagebreak
+The statute that took the longest time\footnote{It is the forth statute from the left, partially covered by the vertical axis legend} (71.98s and 28.71s) is \textit{Rättegångsbalken} (1942:740) which consist of 59 chapters and more than 100 change statutes, hence it takes a lot of time to go through and mark up all that text.\\\\
+In this next chart we have a zoomed in version of the chart with running times on the Mac for the selected statutes, here it becomes even more clear that most statuts parse very fast. As we can see that most statute's running time is less than two seconds (average running time is 1.24 seconds).\\\\
+\includegraphics[scale=0.35]{../imgs/parseMac.png}
+\captionof{figure}{Chart zoomed in to 6 seconds showing running times on the Mac for the selected statutes}
+

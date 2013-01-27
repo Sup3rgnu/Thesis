@@ -1,20 +1,15 @@
 \chapter{Conclusions and Discussions}
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+A prototype that handles parsing and mark up of SFS documents according to applicable standards was developed. The complete prototype was not fully functional in the sense that all the steps (downloading the documents, parse each document, markup each document with rdf, generate HTML ready to be shown in a browser) where not implemented. The interesting parts of the process was the parse and markup step and those worked and gave the sought after result.
 
-\section{Results}
-
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
-
-\subsection{(Lack of) Use today}
 \section{Future development}
+The law parsing program was done as a prototype that Notisum could use to decide if they should rewrite their current parsing process to a more efficient one. During the development of the prototype there was not time to implement all the different types of legal documents that Notisum handles. However the prototype was designed with that in mind in a loosely coupled way which makes it easy to implement new modules and classes for other types of legal documents. The final step in a “complete process” where the formatted documents are transformed to HTML documents that have a certain layout and style sheets matching for example Notisum’s site was not implemented. 
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+\subsection{RDF markup}
+Apart from the way the documents are parsed a new feature was introduced, marking up the documents with RDF, adding semantics to the documents according to ideas proposed by the Swedish government. The result of the RDF markup was successful in a sense that the resulting documents are semantically correct, we can for example extract multiple RDF triples from each legal document that are meaningful to computers and allows us to link our data in accordance with applicable standards for the Semantic web specifications. However the markup is not complete in the sense of exactly adhering to a standard or vocabulary that is being used by everyone working with Swedish laws, because there is none. Rättsinformationsprojektet was commenced to develop this standard and see to that all authorities producing legal documents would follow it, this work takes a lot of time. Since the project started in 2006 there has not really been that much progress, there has been a few enthusiasts that have put a lot of work into the project trying to get resources and support to do it full scale.\\\\
+If the project would have been implemented already and all authorities were marking up their documents according to a standard vocabulary the RDF markup feature of the prototype would have been useless since the documents would already have been marked up when downloaded. But since that is not the case, the markup feature becomes even more important and hopefully it will help to shed light on Rättsinformationsprojektet and maybe speed up the work.\\\\
+There are some attributes that are used in the prototype’s markup that are not following the vocabulary suggested by Rättsinformationsprojektet. I felt that it was not top priority to exactly follow the suggestions and ideas proposed by Rättsinformationsprojektet that has been on hold for the last couple of years but rather marking up the documents with meaningful attributes that easily can be updated later on when hopefully, the work with Rättsinformationsprojektet is resumed and a standard is set.  
 
-\subsection{RDF Database}
-
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Mauris
-purus. 
+\section{Linked Data}
+Something that is not mentioned in this thesis is the potential dangers with linked data. It is not a subject that I have looked into that much during the work, I have focused on the positives and possibilities instead. But of course linked data can be misused by both humans and machines. It is something we have to take into mind, it might not be a problem today but might as well be in a few years as linked data grows more popular.\\\\
+\quote{"One of the defining characteristics of a successful information system is its level of exploitation by spammers."} -Ian Davis\footnote{Taken from an article regarding threats to Linked data \url{http://blog.iandavis.com/2009/09/21/linked-data-spam-vectors/}}
